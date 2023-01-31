@@ -3,19 +3,21 @@
 
 namespace ft
 {
+    
+    #include <cstddef> 
     template <typename T, typename Category>
     class Iterator
     {
     protected:
-        typedef typename ptrdiff_t difference_type;
-        typedef typename T value_type;
-        typedef typename T *pointer;
-        typedef typename T &reference;
-        typedef typename Category iterator_category;
-        pointer _ptr;
-
     private:
     public:
+        typedef ptrdiff_t difference_type;
+        typedef T value_type;
+        typedef T *pointer;
+        typedef T &reference;
+        typedef Category iterator_category;
+        
+        pointer _ptr;
         Iterator() : _ptr(NULL)
         {
         }
@@ -51,32 +53,32 @@ namespace ft
         {
             return (_ptr != _iterator._ptr);
         }
-        bool operator==(const iterator &_iterator)
+        bool operator==(const Iterator &_iterator)
         {
             return this->_pointer == _iterator._pointer;
         }
 
-        bool operator!=(const iterator &_iterator)
+        bool operator!=(const Iterator &_iterator)
         {
             return this->_pointer != _iterator._pointer;
         }
 
-        bool operator<(const iterator &_iterator)
+        bool operator<(const Iterator &_iterator)
         {
             return this->_pointer < _iterator._pointer;
         }
 
-        bool operator<=(const iterator &_iterator)
+        bool operator<=(const Iterator &_iterator)
         {
             return this->_pointer <= _iterator._pointer;
         }
 
-        bool operator>(const iterator &_iterator)
+        bool operator>(const Iterator &_iterator)
         {
             return this->_pointer > _iterator._pointer;
         }
 
-        bool operator>=(const iterator &_iterator)
+        bool operator>=(const Iterator &_iterator)
         {
             return this->_pointer >= _iterator._pointer;
         }

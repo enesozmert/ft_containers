@@ -9,7 +9,7 @@ namespace ft
     class RandomAccessIterator : public Iterator<T, std::random_access_iterator_tag>
     {
     private:
-        typedef typename RandomAccessIterator<T> randomIterator;
+        typedef RandomAccessIterator<T> randomIterator;
     public:
         RandomAccessIterator() : _ptr(NULL) {}
         RandomAccessIterator(const randomIterator &other)
@@ -27,15 +27,16 @@ namespace ft
         RandomAccessIterator(pointer ptr) : _ptr(ptr) {}
         RandomAccessIterator &operator--()
         {
-            _ptr--;
+            this->_ptr--;
             return (*this);
         }
         RandomAccessIterator operator--(int)
         {
-            Iterator tmp = *this;
+            RandomAccessIterator tmp = *this;
             --(*tmp);
             return (tmp);
         }
+        
         reference operator[](const int n) const
         {
             return (this->_ptr[n]);

@@ -35,7 +35,7 @@ namespace ft
         Vector(size_type n, const value_type &val = value_type(), const allocator_type &alloc = allocator_type()) : _size(n), _capacity(n), _allocator(alloc), _data(this->_allocator.allocate(this->_capacity))
         {
             for (size_type i = 0; i < this->_size; i++)
-                this->_allocator.construct(&this->_array[i], val);
+                this->_allocator.construct(&this->_data[i], val);
         }
 
         Vector(const Vector &vector)
@@ -54,8 +54,42 @@ namespace ft
             return (*this);
         }
         ~Vector();
+        void _reAlloc(size_type newCapacity)
+        {
+            value_type *newBlock;
 
-        
+            if (newCapacity < this->_capacity)
+                return;
+            newBlock = this->_allocator.allocate(newCapacity);
+            for (size_type i = 0; i < this->_size; i++)
+                this->_allocator.construct(&newBlock[i], this->_data[i]);
+            this->_allocator.deallocate(this->_data, this->_capacity);
+            this->_data = newBlock;
+            this->_capacity = newCapacity;
+        }
+        void _smart_reAlloc(size_type newCapacity)
+        {
+            if (newCapacity <= this->_capacity)
+                return;
+            if (this->_size == 0)
+                this->_reAlloc(1);
+            else if (newCapacity > (this->_size * 2))
+                this->_reAlloc(newCapacity);
+            else
+                this->_reAlloc(this->_size * 2);
+        }
+        void clear()
+        {
+            this->_allocator.destroy(this->_data);
+            this->_size = 0;
+        }
+        void push_back(value_type value)
+        {
+            this->_smart_reAlloc(this->_size + 1);
+            this->_allocator.construct(&this->_data[this->_size], value);
+            this->_size++;
+        }
+        size_t size() const { return this->_size; }
     };
 }
 
