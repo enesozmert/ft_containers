@@ -11,7 +11,10 @@ namespace ft
     private:
         typedef RandomAccessIterator<T> randomIterator;
     public:
-        RandomAccessIterator() : _ptr(NULL) {}
+        RandomAccessIterator() 
+        {
+            this->_ptr = NULL;
+        }
         RandomAccessIterator(const randomIterator &other)
         {
             this->_ptr = other._ptr;
@@ -24,7 +27,10 @@ namespace ft
             return (*this);
         }
         ~RandomAccessIterator();
-        RandomAccessIterator(pointer ptr) : _ptr(ptr) {}
+        RandomAccessIterator(T* ptr) 
+        {
+            this->_ptr = ptr;
+        }
         RandomAccessIterator &operator--()
         {
             this->_ptr--;
@@ -36,8 +42,7 @@ namespace ft
             --(*tmp);
             return (tmp);
         }
-        
-        reference operator[](const int n) const
+        T& operator[](const int n) const
         {
             return (this->_ptr[n]);
         }

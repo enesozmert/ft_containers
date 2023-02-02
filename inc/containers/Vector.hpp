@@ -18,7 +18,7 @@ namespace ft
         typedef typename Alloc::const_reference const_reference; // Reference to constant element
         typedef typename Alloc::pointer pointer;                 // Pointer to element
         typedef typename Alloc::const_pointer const_pointer;     // Pointer to const element
-        typedef ft::RandomAccessIterator<T> iterator;
+        typedef RandomAccessIterator<T> iterator;
         typedef ptrdiff_t difference_type;
         typedef std::size_t size_type;
 

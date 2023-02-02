@@ -9,8 +9,6 @@ namespace ft
     class Iterator
     {
     protected:
-    private:
-    public:
         typedef ptrdiff_t difference_type;
         typedef T value_type;
         typedef T *pointer;
@@ -18,8 +16,11 @@ namespace ft
         typedef Category iterator_category;
         
         pointer _ptr;
-        Iterator() : _ptr(NULL)
+    private:
+    public:
+        Iterator()
         {
+            this->_ptr = NULL;
         }
         Iterator(const Iterator &_iterator)
         {
@@ -32,7 +33,7 @@ namespace ft
             *this = _iterator;
             return (*this);
         }
-        ~Iterator() {}
+        virtual ~Iterator() {}
         Iterator(pointer ptr) : _ptr(ptr){};
         reference operator*() const
         {
