@@ -11,6 +11,10 @@ namespace ft
     private:
         typedef RandomAccessIterator<T> randomIterator;
     public:
+        typedef ptrdiff_t difference_type;
+        typedef T value_type;
+        typedef T *pointer;
+        typedef T &reference;
         RandomAccessIterator() 
         {
             this->_ptr = NULL;
@@ -27,7 +31,7 @@ namespace ft
             return (*this);
         }
         ~RandomAccessIterator();
-        RandomAccessIterator(T* ptr) 
+        RandomAccessIterator(pointer ptr) 
         {
             this->_ptr = ptr;
         }
@@ -42,7 +46,7 @@ namespace ft
             --(*tmp);
             return (tmp);
         }
-        T& operator[](const int n) const
+        reference operator[](const int n) const
         {
             return (this->_ptr[n]);
         }

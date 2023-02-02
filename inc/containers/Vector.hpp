@@ -53,7 +53,7 @@ namespace ft
             *this = vector;
             return (*this);
         }
-        ~Vector();
+        ~Vector(){};
         void _reAlloc(size_type newCapacity)
         {
             value_type *newBlock;
@@ -78,6 +78,10 @@ namespace ft
             else
                 this->_reAlloc(this->_size * 2);
         }
+        reference operator[](int index)
+        {
+            return _data[index];
+        }
         void clear()
         {
             this->_allocator.destroy(this->_data);
@@ -88,6 +92,13 @@ namespace ft
             this->_smart_reAlloc(this->_size + 1);
             this->_allocator.construct(&this->_data[this->_size], value);
             this->_size++;
+        }
+        void pop_back()
+        {
+            this->_smart_reAlloc(this->_size - 1);
+            for (size_type i = 0; i < this->_size - 1; i++)
+                this->_allocator.construct(&this->_data[i], this->_data[i]);
+            this->_size--;
         }
         size_t size() const { return this->_size; }
     };
