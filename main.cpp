@@ -52,7 +52,7 @@ int main()
     ar.resize(8, 100);
     ar.resize(12);
 
-    std::cout << "myvector contains:";
+    std::cout << "myvector contains resize test:";
     for (size_t i = 0; i < ar.size(); i++)
         std::cout << ' ' << ar[i];
     std::cout << '\n';

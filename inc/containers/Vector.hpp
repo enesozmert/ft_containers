@@ -110,6 +110,10 @@ namespace ft
         //     for (size_type i = 0; i < tmp->_size; i++)
         //         x->_data[i] = tmp->_data[i];
         // }
+        size_type capacity() const
+        {
+            return (this->_capacity);
+        }
         size_t size() const { return this->_size; }
         void resize (size_type n, value_type val = value_type())
         {
@@ -123,6 +127,10 @@ namespace ft
             for ( ; i < n; i++)
                     this->_allocator.construct(&this->_data[i], static_cast<T>(val));
             this->_size = n;
+        }
+        void reserve (size_type n)
+        {
+
         }
     };
 }
