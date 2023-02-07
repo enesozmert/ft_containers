@@ -109,32 +109,20 @@ namespace ft
         //         this->_data[i] = x->_data[i];
         //     for (size_type i = 0; i < tmp->_size; i++)
         //         x->_data[i] = tmp->_data[i];
-            
         // }
         size_t size() const { return this->_size; }
         void resize (size_type n, value_type val = value_type())
         {
             if (n == this->_size)
-					return ;
-            if (this->_size > n) //size = 5 , n = 3;{0,1,2}
-            {
-                this->_smart_reAlloc(n);
-                for (size_type i = 0; i < n; i++)
-                    this->_allocator.construct(&this->_data[i], this->_data[i]);
-            }
-            else if (this->_size < n)
-            {
-                this->_smart_reAlloc(n);
-                for (size_type i = 0; i < this->_size; i++)
-                    this->_allocator.construct(&this->_data[i], this->_data[i]);
-                for (size_type i = this->_size - 1; i < n; i++)
-                    this->_allocator.construct(&this->_data[i], static_cast<void *>(_data[i]));
-            }
-            else
-            {
-                for (size_type i = this->_size - 1; i < n; i++)
-                    this->push_back(value);
-            }
+                return ;
+            size_type i = 0;
+            this->_smart_reAlloc(n);
+            size_type first = std::min(this->_size, n);
+            for ( ; i < first; i++)
+                this->_allocator.construct(&this->_data[i], this->_data[i]);
+            for ( ; i < n; i++)
+                    this->_allocator.construct(&this->_data[i], static_cast<T>(val));
+            this->_size = n;
         }
     };
 }
