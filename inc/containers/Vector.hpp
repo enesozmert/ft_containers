@@ -114,7 +114,10 @@ namespace ft
         {
             return (this->_capacity);
         }
-        size_t size() const { return this->_size; }
+        size_t size() const 
+        {
+            return this->_size;
+        }
         void resize (size_type n, value_type val = value_type())
         {
             if (n == this->_size)
@@ -130,7 +133,7 @@ namespace ft
         }
         void reserve (size_type n)
         {
-
+            (void)n;
         }
     };
 }
