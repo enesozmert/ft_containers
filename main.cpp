@@ -58,6 +58,43 @@ int main()
     std::cout << '\n';
     // for (int i;i < ar.size() ; ptr++)
     //     cout << *ptr << " ";
+    std::cout << "-----------------------------------------" << std::endl;
+    ft::Vector<int>::size_type sz;
 
+    ft::Vector<int> foo;
+    sz = foo.capacity();
+    std::cout << "making foo grow:\n";
+    for (int i = 0; i < 100; ++i)
+    {
+        foo.push_back(i);
+        if (sz != foo.capacity())
+        {
+            sz = foo.capacity();
+            std::cout << "capacity changed: " << sz << '\n';
+        }
+    }
+
+    ft::Vector<int> bar;
+    sz = bar.capacity();
+    bar.reserve(100); // this is the only difference with foo above
+    std::cout << "making bar grow:\n";
+    for (int i = 0; i < 100; ++i)
+    {
+        bar.push_back(i);
+        if (sz != bar.capacity())
+        {
+            sz = bar.capacity();
+            std::cout << "capacity changed: " << sz << '\n';
+        }
+    }
+    std::cout << "-----------------------------------------" << std::endl; 
+    std::cout << std::boolalpha;
+    ft::Vector<int> numbers;
+    std::cout << "Initially, numbers.empty(): " << numbers.empty() << '\n';
+ 
+    numbers.push_back(42);
+    std::cout << "After adding elements, numbers.empty(): " << numbers.empty() << '\n';
+    std::cout << "-----------------------------------------" << std::endl;
+    
     return 0;
 }

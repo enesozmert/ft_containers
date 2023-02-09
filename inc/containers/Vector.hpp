@@ -82,16 +82,20 @@ namespace ft
         {
             return _data[index];
         }
-        void clear()
+        allocator_type get_allocator() const
         {
-            this->_allocator.destroy(this->_data);
-            this->_size = 0;
+            return (this->_allocator);
         }
         void push_back(value_type value)
         {
             this->_smart_reAlloc(this->_size + 1);
             this->_allocator.construct(&this->_data[this->_size], value);
             this->_size++;
+        }
+        void clear()
+        {
+            this->_allocator.destroy(this->_data);
+            this->_size = 0;
         }
         void pop_back()
         {
@@ -100,16 +104,10 @@ namespace ft
                 this->_allocator.construct(&this->_data[i], this->_data[i]);
             this->_size--;
         }
-        // void swap (Vector& x)
-        // {
-        //     Vector<value_type>(x._size) tmp;
-        //     for (size_type i = 0; i < tmp->_size; i++)
-        //         tmp->_data[i] = this->_data[i];
-        //     for (size_type i = 0; i < tmp->_size; i++)
-        //         this->_data[i] = x->_data[i];
-        //     for (size_type i = 0; i < tmp->_size; i++)
-        //         x->_data[i] = tmp->_data[i];
-        // }
+        void swap (Vector& x)
+        {
+            (void)x;
+        }
         size_type capacity() const
         {
             return (this->_capacity);
@@ -133,8 +131,14 @@ namespace ft
         }
         void reserve (size_type n)
         {
-            (void)n;
+            if (n > this->_capacity)
+                this->_reAlloc(n);
         }
+        bool empty() const
+        {
+            return (this->_size == 0 ? true : false);
+        }
+
     };
 }
 
