@@ -9,19 +9,16 @@ namespace ft
     class Iterator
     {
     protected:
-        typedef ptrdiff_t difference_type;
-        typedef T value_type;
-        typedef T *pointer;
-        typedef T &reference;
+        typedef T iterator_type;
+        typedef typename ft::iterator_traits<T>::difference_type    difference_type;
+        typedef typename ft::iterator_traits<T>::reference          reference;
+        typedef typename ft::iterator_traits<T>::const_reference    const_reference;
+        typedef typename ft::iterator_traits<T>::pointer            pointer;
+        typedef typename ft::iterator_traits<T>::value_type         value_type;
         typedef Category iterator_category;
-        
         pointer _ptr;
     private:
     public:
-        Iterator()
-        {
-            this->_ptr = NULL;
-        }
         Iterator(const Iterator &_iterator)
         {
             this->_ptr = _iterator._ptr;
@@ -33,12 +30,8 @@ namespace ft
             *this = _iterator;
             return (*this);
         }
-        virtual ~Iterator() {}
         Iterator(pointer ptr) : _ptr(ptr){};
-        reference operator*() const
-        {
-            return (*_ptr);
-        }
+        virtual ~Iterator() {}
         Iterator &operator++()
         {
             _ptr++;
@@ -50,39 +43,35 @@ namespace ft
             ++(*tmp);
             return (tmp);
         }
-        bool operator!=(const Iterator &_iterator) const
-        {
-            return (_ptr != _iterator._ptr);
-        }
-        bool operator==(const Iterator &_iterator)
-        {
-            return this->_pointer == _iterator._pointer;
-        }
 
-        bool operator!=(const Iterator &_iterator)
-        {
-            return this->_pointer != _iterator._pointer;
-        }
+        // bool operator!=(const Iterator &_iterator)
+        // {
+        //     return (_ptr != _iterator._ptr);
+        // }
+        // bool operator==(const Iterator &_iterator)
+        // {
+        //     return this->_ptr == _iterator._ptr;
+        // }
 
-        bool operator<(const Iterator &_iterator)
-        {
-            return this->_pointer < _iterator._pointer;
-        }
+        // bool operator<(const Iterator &_iterator)
+        // {
+        //     return this->_ptr < _iterator._ptr;
+        // }
 
-        bool operator<=(const Iterator &_iterator)
-        {
-            return this->_pointer <= _iterator._pointer;
-        }
+        // bool operator<=(const Iterator &_iterator)
+        // {
+        //     return this->_ptr <= _iterator._ptr;
+        // }
 
-        bool operator>(const Iterator &_iterator)
-        {
-            return this->_pointer > _iterator._pointer;
-        }
+        // bool operator>(const Iterator &_iterator)
+        // {
+        //     return this->_ptr > _iterator._ptr;
+        // }
 
-        bool operator>=(const Iterator &_iterator)
-        {
-            return this->_pointer >= _iterator._pointer;
-        }
+        // bool operator>=(const Iterator &_iterator)
+        // {
+        //     return this->_ptr >= _iterator._ptr;
+        // }
     };
 }
 

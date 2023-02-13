@@ -5,7 +5,10 @@
 #include <memory>
 #include <iostream>
 #include <string>
-#include "../iterators/RandomAccessIterator.hpp"
+#include "../iterators/ReverseIterator.hpp"
+#include "../exception/VectorException.hpp"
+
+class VectorException;
 namespace ft
 {
     template <class T, class Alloc = std::allocator<T> >
@@ -18,7 +21,7 @@ namespace ft
         typedef typename Alloc::const_reference const_reference; // Reference to constant element
         typedef typename Alloc::pointer pointer;                 // Pointer to element
         typedef typename Alloc::const_pointer const_pointer;     // Pointer to const element
-        typedef RandomAccessIterator<T> iterator;
+        typedef typename ft::ReverseIterator reverseIterator;
         typedef ptrdiff_t difference_type;
         typedef std::size_t size_type;
 
@@ -104,32 +107,49 @@ namespace ft
                 this->_allocator.construct(&this->_data[i], this->_data[i]);
             this->_size--;
         }
-        void swap (Vector& x)
+        void swap(Vector &x)
         {
-            (void)x;
+            size_t tmp_size = x._size;
+            size_t tmp_capacity = x._capacity;
+            Alloc tmp_allocator = x._allocator;
+            value_type *tmp_data = x._data;
+
+            x._size = this->_size;
+            x._capacity = this->_capacity;
+            x._allocator = this->_allocator;
+            x._data = this->_data;
+
+            this->_size = tmp_size;
+            this->_capacity = tmp_capacity;
+            this->_allocator = tmp_allocator;
+            this->_data = tmp_data;
         }
         size_type capacity() const
         {
             return (this->_capacity);
         }
-        size_t size() const 
+        size_t size() const
         {
             return this->_size;
         }
-        void resize (size_type n, value_type val = value_type())
+        size_type max_size() const
+        {
+            return (this->_allocator.max_size());
+        }
+        void resize(size_type n, value_type val = value_type())
         {
             if (n == this->_size)
-                return ;
+                return;
             size_type i = 0;
             this->_smart_reAlloc(n);
             size_type first = std::min(this->_size, n);
-            for ( ; i < first; i++)
+            for (; i < first; i++)
                 this->_allocator.construct(&this->_data[i], this->_data[i]);
-            for ( ; i < n; i++)
-                    this->_allocator.construct(&this->_data[i], static_cast<T>(val));
+            for (; i < n; i++)
+                this->_allocator.construct(&this->_data[i], static_cast<T>(val));
             this->_size = n;
         }
-        void reserve (size_type n)
+        void reserve(size_type n)
         {
             if (n > this->_capacity)
                 this->_reAlloc(n);
@@ -138,7 +158,47 @@ namespace ft
         {
             return (this->_size == 0 ? true : false);
         }
+        reference front()
+        {
+            return (this->_data[0]);
+        }
+        const_reference front() const
+        {
+            return (this->_data[0]);
+        }
 
+        //iter
+        template <class iterator>  void assign (iterator first, iterator last)
+        {
+            this->_smart_reAlloc();
+        }
+        void assign (size_type n, const value_type& val)
+        {
+            this->_smart_reAlloc(n);
+            for (int i = 0; i < n; i++)
+                this->_allocator.construct(&this->_data[i], static_cast<T>(val));
+        }
+
+        bool positionCheck(int n)
+        {
+            if (n < 0 || n >= this->_size)
+                return (false);
+            return (true);
+        }
+
+        reference at (size_type n)
+        {
+            if (!positionCheck(n))
+                VectorException::OutOfRange();
+            return (this->_data[n]);
+        }
+
+        const_reference at (size_type n) const
+        {
+            if (!positionCheck(n))
+                VectorException::OutOfRange();
+            return (this->_data[n]);
+        }
     };
 }
 
