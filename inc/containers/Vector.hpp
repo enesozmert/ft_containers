@@ -6,6 +6,7 @@
 #include <iostream>
 #include <string>
 #include "../iterators/ReverseIterator.hpp"
+#include "../iterators/BidirectionalIterator.hpp"
 #include "../exception/VectorException.hpp"
 
 class VectorException;
@@ -21,7 +22,7 @@ namespace ft
         typedef typename Alloc::const_reference const_reference; // Reference to constant element
         typedef typename Alloc::pointer pointer;                 // Pointer to element
         typedef typename Alloc::const_pointer const_pointer;     // Pointer to const element
-        typedef typename ft::ReverseIterator reverseIterator;
+        typedef ft::ReverseIterator<T> reverseIterator;
         typedef ptrdiff_t difference_type;
         typedef std::size_t size_type;
 
@@ -170,12 +171,14 @@ namespace ft
         //iter
         template <class iterator>  void assign (iterator first, iterator last)
         {
+            (void)last;
+            (void)first;
             this->_smart_reAlloc();
         }
         void assign (size_type n, const value_type& val)
         {
             this->_smart_reAlloc(n);
-            for (int i = 0; i < n; i++)
+            for (size_type i = 0; i < n; i++)
                 this->_allocator.construct(&this->_data[i], static_cast<T>(val));
         }
 
