@@ -1,7 +1,9 @@
-#ifndef VECTOREXCEPTION_HPP
-#define VECTOREXCEPTION_HPP
+#ifndef VECTOR_EXCEPTION_HPP
+#define VECTOR_EXCEPTION_HPP
 
-class VectorException : public std::exception
+#include <exception>
+
+class vector_exception : public std::exception
 {
     public:
         class OutOfRange : public std::exception
