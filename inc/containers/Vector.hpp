@@ -26,21 +26,29 @@ namespace ft
         typedef ft::RandomAccessIterator<T> iterator;
         typedef ptrdiff_t difference_type;
         typedef std::size_t size_type;
+
     private:
         size_type _size;
         size_type _capacity;
         size_type _max_size;
         Alloc _allocator;
         value_type *_data;
-    public:
-        vector(const allocator_type &alloc = allocator_type()) : _size(0), _capacity(0), _max_size(0), _allocator(alloc), _data(NULL) {}
 
-        vector(size_type n, const value_type &val = value_type(), const allocator_type &alloc = allocator_type()) : _size(n), _capacity(n), _allocator(alloc), _data(this->_allocator.allocate(this->_capacity))
+    public:
+        explicit vector(const allocator_type &alloc = allocator_type()) : _size(0), _capacity(0), _max_size(0), _allocator(alloc), _data(NULL) {}
+        explicit vector(size_type n, const value_type &val = value_type(), const allocator_type &alloc = allocator_type()) : _size(n), _capacity(n), _allocator(alloc), _data(this->_allocator.allocate(this->_capacity))
         {
             for (size_type i = 0; i < this->_size; i++)
                 this->_allocator.construct(&this->_data[i], val);
+            // assign(n, val);
         }
+        template <class InputIterator>
+        explicit vector(InputIterator first, InputIterator sec, const allocator_type &alloc = allocator_type(), typename ft::enable_if<!is_integral<InputIterator>::value, bool>::type = true) : _size(0), _capacity(0), _data(NULL), _allocator(alloc)
+        {
+            assign(first, sec);
+        };
 
+    public :
         vector(const vector &vector)
         {
             this->_size = vector._size;
@@ -57,8 +65,9 @@ namespace ft
             return (*this);
         }
         ~vector(){};
-        iterator begin(){return iterator(this->_data);}
-        iterator end(){return iterator(this->_data + this->_size);}
+    public :
+        iterator begin() { return iterator(this->_data); }
+        iterator end() { return iterator(this->_data + this->_size); }
         void _reAlloc(size_type newCapacity)
         {
             value_type *newBlock;
@@ -109,22 +118,27 @@ namespace ft
                 this->_allocator.construct(&this->_data[i], this->_data[i]);
             this->_size--;
         }
-        void swap(vector &x)
+        void swap(vector &vector)
         {
-            size_t tmp_size = x._size;
-            size_t tmp_capacity = x._capacity;
-            Alloc tmp_allocator = x._allocator;
-            value_type *tmp_data = x._data;
+            // size_t tmp_size = x._size;
+            // size_t tmp_capacity = x._capacity;
+            // Alloc tmp_allocator = x._allocator;
+            // value_type *tmp_data = x._data;
 
-            x._size = this->_size;
-            x._capacity = this->_capacity;
-            x._allocator = this->_allocator;
-            x._data = this->_data;
+            // x._size = this->_size;
+            // x._capacity = this->_capacity;
+            // x._allocator = this->_allocator;
+            // x._data = this->_data;
 
-            this->_size = tmp_size;
-            this->_capacity = tmp_capacity;
-            this->_allocator = tmp_allocator;
-            this->_data = tmp_data;
+            // this->_size = tmp_size;
+            // this->_capacity = tmp_capacity;
+            // this->_allocator = tmp_allocator;
+            // this->_data = tmp_data;
+
+            std::swap(vector._size, this->_size);
+			std::swap(vector._capacity, this->_capacity);
+			std::swap(vector._data, this->_data);
+			std::swap(vector._allocator, this->_allocator);
         }
         size_type capacity() const
         {
@@ -168,20 +182,6 @@ namespace ft
         {
             return (this->_data[0]);
         }
-        
-        reference at (size_type n)
-        {
-            if (!positionCheck(n))
-                throw vector_exception::OutOfRange();
-            return (this->_data[n]);
-        }
-
-        const_reference at (size_type n) const
-        {
-            if (!positionCheck(n))
-                throw vector_exception::OutOfRange();
-            return (this->_data[n]);
-        }
 
         reference back()
         {
@@ -192,9 +192,23 @@ namespace ft
         {
             return (_data[_size - 1]);
         }
-        //iter
+
+        reference at(size_type n)
+        {
+            if (!positionCheck(n))
+                throw vector_exception::OutOfRange();
+            return (this->_data[n]);
+        }
+
+        const_reference at(size_type n) const
+        {
+            if (!positionCheck(n))
+                throw vector_exception::OutOfRange();
+            return (this->_data[n]);
+        }
+        // iter
         template <class InputIterator>
-        void assign (InputIterator first, InputIterator last, typename ft::enable_if<!ft::is_integral<InputIterator>::value, InputIterator>::type* = NULL)
+        void assign(InputIterator first, InputIterator last, typename ft::enable_if<!ft::is_integral<InputIterator>::value, InputIterator>::type = false)
         {
             size_type i = 0;
             size_type n = 0;
@@ -210,7 +224,7 @@ namespace ft
             }
             this->_size = n;
         }
-        void assign (size_type n, const value_type& val)
+        void assign(size_type n, const value_type &val)
         {
             size_type i = 0;
 
@@ -223,17 +237,33 @@ namespace ft
             _size = n;
         }
 
-        iterator erase (iterator position)
+        iterator erase(iterator position)
         {
-            this->_allocator.destroy(&(*position));
-            for (size_type i = 0; i < _size - 1; i++)
-                this->_allocator.construct(&_data[i], _data[i]);
-            _size--;
-            return (position);
+            iterator tmp(position);
+            ++tmp;
+            return (this->erase(position, tmp));
         }
-        // iterator erase (iterator first, iterator last)
+        iterator erase(iterator first, iterator last)
+        {
+            difference_type n = last - first;
+            iterator new_end = std::copy(last, this->end(), first);
+            for (iterator it = new_end; it != this->end(); ++it)
+                this->_allocator.destroy(std::addressof(*it));
+            this->_size -= n;
+            return new_end;
+        }
+
+        // iterator insert(iterator position, const value_type &val)
         // {
-            
+        // }
+
+        // void insert(iterator position, size_type n, const value_type &val)
+        // {
+        // }
+
+        // template <class InputIterator>
+        // void insert(iterator position, InputIterator first, InputIterator last)
+        // {
         // }
 
         bool positionCheck(size_type n)
@@ -242,8 +272,6 @@ namespace ft
                 return (false);
             return (true);
         }
-
     };
 }
-
 #endif

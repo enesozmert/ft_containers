@@ -5,7 +5,7 @@
 using namespace ft;
 
 template <typename T>
-void printVec(std::vector<T> vec)
+void printVec(ft::vector<T> vec)
 {
     std::cout << "size" << vec.size() << std::endl;
     std::cout << "cap" << vec.capacity() << std::endl;//2 4 8 16
@@ -212,8 +212,9 @@ int main()
     // std::cout << "Elements are\n";
     // for (size_t i = 0; i < myv.size(); i++)
     //     std::cout << myv[i] << std::endl;
+    std::cout << "-----------------------------------------" << std::endl;
 
-    std::vector<int> myvector;
+    ft::vector<int> myvector;
 
     // set some values (from 1 to 10)
     for (int i = 1; i <= 10; i++)
@@ -223,8 +224,9 @@ int main()
     // erase the 6th element
     myvector.erase(myvector.begin() + 5);
     printVec<int>(myvector);
+    std::cout << "-------------------[BEGIN-END)---------------------" << std::endl;
     // // erase the first 3 elements:
-    // myvector.erase(myvector.begin(), myvector.begin() + 3);
-    // printVec<int>(myvector);
+    myvector.erase(myvector.begin() + 1, myvector.begin() + 5); //[first, last) 1, 2, 0 10
+    printVec<int>(myvector);
     return (0);
 }

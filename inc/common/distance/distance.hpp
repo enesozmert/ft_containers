@@ -12,7 +12,7 @@ template <class input_itt>
 				first++;
 				res++;
 			}
-			return res;
+			return (res);
 		}
 
 }
