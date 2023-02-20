@@ -106,8 +106,8 @@ int main()
     // numbers.push_back(42);
     // std::cout << "After adding elements, numbers.empty(): " << numbers.empty() << '\n';
     // std::cout << "-----------------------------------------" << std::endl;
-    // ft::Vector<int> foo1(3, 100); // three ints with a value of 100
-    // ft::Vector<int> bar1(5, 200); // five ints with a value of 200
+    // ft::vector<int> foo1(3, 100); // three ints with a value of 100
+    // ft::vector<int> bar1(5, 200); // five ints with a value of 200
 
     // foo1.swap(bar1);
 

@@ -23,24 +23,24 @@ namespace ft
         typedef typename Alloc::const_reference const_reference; // Reference to constant element
         typedef typename Alloc::pointer pointer;                 // Pointer to element
         typedef typename Alloc::const_pointer const_pointer;     // Pointer to const element
-        typedef ft::RandomAccessIterator<T> iterator;
+        typedef ft::RandomAccessIterator<pointer> iterator;
+        typedef ft::RandomAccessIterator<const_pointer> const_iterator;
         typedef ptrdiff_t difference_type;
         typedef std::size_t size_type;
 
     private:
         size_type _size;
         size_type _capacity;
-        size_type _max_size;
         Alloc _allocator;
         value_type *_data;
 
     public:
-        explicit vector(const allocator_type &alloc = allocator_type()) : _size(0), _capacity(0), _max_size(0), _allocator(alloc), _data(NULL) {}
-        explicit vector(size_type n, const value_type &val = value_type(), const allocator_type &alloc = allocator_type()) : _size(n), _capacity(n), _allocator(alloc), _data(this->_allocator.allocate(this->_capacity))
+        explicit vector(const allocator_type &alloc = allocator_type()) : _size(0), _capacity(0), _allocator(alloc), _data(NULL) {}
+        explicit vector(size_type n, const value_type &val = value_type(), const allocator_type &alloc = allocator_type()) : _size(n), _capacity(n), _allocator(alloc), _data(0)
         {
-            for (size_type i = 0; i < this->_size; i++)
-                this->_allocator.construct(&this->_data[i], val);
-            // assign(n, val);
+            // for (size_type i = 0; i < this->_size; i++)
+            //     this->_allocator.construct(&this->_data[i], val);
+            assign(n, val);
         }
         template <class InputIterator>
         explicit vector(InputIterator first, InputIterator sec, const allocator_type &alloc = allocator_type(), typename ft::enable_if<!is_integral<InputIterator>::value, bool>::type = true) : _size(0), _capacity(0), _data(NULL), _allocator(alloc)
@@ -53,7 +53,6 @@ namespace ft
         {
             this->_size = vector._size;
             this->_capacity = vector._capacity;
-            this->_max_size = vector._max_size;
             this->_allocator = vector._allocator;
             this->_data = vector._data;
         }
@@ -66,8 +65,10 @@ namespace ft
         }
         ~vector(){};
     public :
-        iterator begin() { return iterator(this->_data); }
-        iterator end() { return iterator(this->_data + this->_size); }
+        iterator				begin()					{ return (iterator(this->_data)); };
+		const_iterator			begin() const			{ return (const_iterator(this->_data)); };
+        iterator				end()					{ return (iterator(begin() + size())); };
+		const_iterator			end() const				{ return (const_iterator(begin() + size())); };
         void _reAlloc(size_type newCapacity)
         {
             value_type *newBlock;
@@ -120,21 +121,6 @@ namespace ft
         }
         void swap(vector &vector)
         {
-            // size_t tmp_size = x._size;
-            // size_t tmp_capacity = x._capacity;
-            // Alloc tmp_allocator = x._allocator;
-            // value_type *tmp_data = x._data;
-
-            // x._size = this->_size;
-            // x._capacity = this->_capacity;
-            // x._allocator = this->_allocator;
-            // x._data = this->_data;
-
-            // this->_size = tmp_size;
-            // this->_capacity = tmp_capacity;
-            // this->_allocator = tmp_allocator;
-            // this->_data = tmp_data;
-
             std::swap(vector._size, this->_size);
 			std::swap(vector._capacity, this->_capacity);
 			std::swap(vector._data, this->_data);

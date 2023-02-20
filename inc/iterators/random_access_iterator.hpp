@@ -15,9 +15,10 @@ namespace ft
 		typedef const T&								const_reference;
 		typedef const T*								const_pointer;
 
-		RandomAccessIterator() : _ptr(nullptr) {}
+		RandomAccessIterator() : _ptr(NULL) {}
 		RandomAccessIterator(T* ptr) : _ptr(ptr) {}
-		RandomAccessIterator(const RandomAccessIterator& other) : _ptr(other._ptr) {}
+		template <class Itererator>
+		explicit RandomAccessIterator(const RandomAccessIterator<Itererator>& other) : _ptr(other.base()) {}
 		RandomAccessIterator& operator=(const RandomAccessIterator& other)
 		{
 			_ptr = other._ptr;

@@ -1,5 +1,5 @@
-/* #ifndef REVERSEITERATOR_HPP
-#define REVERSEITERATOR_HPP
+#ifndef REVERSE_ITERATOR_HPP
+#define REVERSE_ITERATOR_HPP
 
 namespace ft
 {
@@ -96,10 +96,6 @@ namespace ft
         {
             return !(x < y);
         }
-
-        template <class Iterator>
-        typename reverse_iterator<Iterator
-
 }
 
-#endif */
+#endif
