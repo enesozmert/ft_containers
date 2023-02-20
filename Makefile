@@ -1,25 +1,50 @@
-NAME = container
+#Definition
+NAME        	=   container
+CC				=	c++
+USER_NAME1		=	eozmert
+CFLAGS			=	-Wall -Wextra -Werror -std=c++98 -g
+RM				=	rm -f
 
-FILES = $(wildcard *.cpp)
+#Directory
+OBJ_DIR			=	obj/
+SRC_DIR			= 	tests/
 
-CC = c++ 
+#Files
+SRC_FILE		=   main test_all
 
-FLAGS = -Wall -Wextra -Werror -std=c++98 -g
+#FileCreate
+SRC 			= 	$(addprefix $(SRC_DIR), $(addsuffix .cpp, $(SRC_FILE)))
+OBJ 			= 	$(addprefix $(OBJ_DIR), $(addsuffix .o, $(SRC_FILE)))
 
-OBJECTS = $(FILES:.cpp=.o)
+OBJF			=	.cache_exists
 
-%.o:%.cpp
-	$(CC) $(FLAGS) -c $< -o $@
+all:		welcome $(NAME)
 
-all: $(NAME)
+$(OBJF):
+			@mkdir -p $(OBJ_DIR)
 
-$(NAME): $(OBJECTS)
-	$(CC) $(OBJECTS) $(FLAGS) -o $(NAME)
+$(OBJ_DIR)%.o : $(SRC_DIR)%.cpp | $(OBJF)
+			@$(CC) $(CFLAGS) -c $< -o $@
+			@echo Compiling Success file is : $< $(SRC_DIR) $@ 
+
+$(NAME):	$(OBJ) $(INC)
+			@$(CC) $(OBJ) $(CFLAGS) -o $(NAME) 
+			@echo $(NAME) compiled!
 
 clean:
-	rm -f $(OBJECTS)
+			@$(RM) -rf $(OBJ_DIR)
+			@$(RM) -f $(OBJF)const
+			@echo Objects files cleaned!
 
-fclean: clean
-	rm -f $(NAME)
+fclean:		clean
+			@$(RM) -f $(NAME)
+			@echo $(NAME) executable files cleaned!
 
-re: fclean all
+re:			fclean all
+			@echo Cleaned and rebuilt
+
+welcome:
+			@echo "CPP"
+			@echo "\n"
+
+.PHONY:		all clean fclean re bonus norm

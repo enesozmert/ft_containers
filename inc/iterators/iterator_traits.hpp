@@ -20,8 +20,11 @@ namespace ft
 
         /* Type of a reference where iterator point, from Iterator. */
         typedef typename Iterator::reference             reference;
+        
+		typedef typename Iterator::const_pointer             const_pointer;
 
         typedef typename Iterator::const_reference             const_reference;
+		
 
         /* The iterator category from Iterator. */
         typedef typename Iterator::iterator_category     iterator_category;
@@ -35,6 +38,7 @@ namespace ft
 			typedef std::ptrdiff_t					difference_type;
 			typedef T								value_type;
 			typedef	T*								pointer;
+			typedef const T*						const_pointer;
 			typedef T&								reference;
 			typedef const T&						const_reference;
 			typedef	std::random_access_iterator_tag	iterator_category;					
@@ -46,6 +50,7 @@ namespace ft
 			typedef std::ptrdiff_t					difference_type;
 			typedef T								value_type;
 			typedef	const T*						pointer;
+			typedef const T*						const_pointer;
 			typedef const T&						reference;
 			typedef const T&						const_reference;
 			typedef	std::random_access_iterator_tag	iterator_category;							
