@@ -6,6 +6,7 @@
 #include <iostream>
 #include <string>
 #include "../iterators/random_access_iterator.hpp"
+#include "../iterators/reverse_iterator.hpp"
 #include "../exception/vector_exception.hpp"
 #include "../common/type_traits/type_traits.hpp"
 #include "../common/distance/distance.hpp"
@@ -23,10 +24,13 @@ namespace ft
         typedef typename Alloc::const_reference const_reference; // Reference to constant element
         typedef typename Alloc::pointer pointer;                 // Pointer to element
         typedef typename Alloc::const_pointer const_pointer;     // Pointer to const element
-        typedef ft::RandomAccessIterator<pointer> iterator;
-        typedef ft::RandomAccessIterator<const_pointer> const_iterator;
         typedef ptrdiff_t difference_type;
         typedef std::size_t size_type;
+        typedef ft::random_access_iterator<pointer> iterator;
+        typedef ft::random_access_iterator<const_pointer> const_iterator;
+
+        typedef ft::reverse_iterator<pointer> reverse_iterator;
+        typedef ft::reverse_iterator<const_pointer> const_reverse_iterator;
 
     private:
         size_type _size;
@@ -48,7 +52,7 @@ namespace ft
             assign(first, sec);
         };
 
-    public :
+    public:
         vector(const vector &vector)
         {
             this->_size = vector._size;
@@ -64,11 +68,17 @@ namespace ft
             return (*this);
         }
         ~vector(){};
-    public :
-        iterator				begin()					{ return (iterator(this->_data)); };
-		const_iterator			begin() const			{ return (const_iterator(this->_data)); };
-        iterator				end()					{ return (iterator(begin() + size())); };
-		const_iterator			end() const				{ return (const_iterator(begin() + size())); };
+
+    public:
+        iterator begin() { return (iterator(this->_data)); };
+        const_iterator begin() const { return (const_iterator(this->_data)); };
+        iterator end() { return (iterator(begin() + size())); };
+        const_iterator end() const { return (const_iterator(begin() + size())); };
+
+        reverse_iterator rbegin() { return (reverse_iterator((end()).base())); };
+        const_reverse_iterator rbegin() const { return (const_reverse_iterator((end()).base())); };
+        reverse_iterator rend() { return (reverse_iterator((begin()).base())); };
+        const_reverse_iterator rend() const { return (const_reverse_iterator((begin()).base())); };
         void _reAlloc(size_type newCapacity)
         {
             value_type *newBlock;
@@ -122,9 +132,9 @@ namespace ft
         void swap(vector &vector)
         {
             std::swap(vector._size, this->_size);
-			std::swap(vector._capacity, this->_capacity);
-			std::swap(vector._data, this->_data);
-			std::swap(vector._allocator, this->_allocator);
+            std::swap(vector._capacity, this->_capacity);
+            std::swap(vector._data, this->_data);
+            std::swap(vector._allocator, this->_allocator);
         }
         size_type capacity() const
         {
@@ -236,12 +246,44 @@ namespace ft
             for (iterator it = new_end; it != this->end(); ++it)
                 this->_allocator.destroy(std::addressof(*it));
             this->_size -= n;
-            return new_end;
+            return (new_end);
         }
 
-        // iterator insert(iterator position, const value_type &val)
+        iterator insert(iterator position, const value_type &val)
+        {
+            _smart_reAlloc(this->_size + 1);
+            iterator new_end = std::copy(this->begin(), position + 1, position);
+            std::cout << "new_end" << *(new_end) << std::endl;
+            for (iterator it = new_end; it != this->end(); it++)
+                this->_allocator.construct(&(*(it)), *it);
+            // this->_allocator.construct(&(*(new_end + 1)), 2);
+            // this->_allocator.construct(&(*(new_end + 2)), 3);
+            // this->_allocator.construct(&(*(new_end + 3)), 4);
+            // this->_allocator.construct(&(*(new_end + 4)), 5);
+            this->_allocator.construct(&(*(new_end)), val);
+            this->_size += 1;
+            return (position);
+        }
+
+        //         iterator insert(iterator position, const value_type& val)
         // {
+        //     size_t index = position - this->begin();
+        //     this->resize(this->size() + 1);
+        //     position = this->begin() + index;
+        //     iterator new_end = this->end() - 1;
+        //     std::copy(position, new_end, new_end + 1);
+        //     this->_allocator.construct(&(*position), val);
+        //     return position;
         // }
+
+        /*                 iterator insert(iterator position, const value_type &val)
+                {
+                    //  = std::copy(this->begin(), position, position + 1);
+                    iterator new_end = std::copy(position + 1, this->end(), position + 2);
+                    this->_allocator.construct(&(*new_end), val);
+                    this->_size += 1;
+                    return (new_end);
+                } */
 
         // void insert(iterator position, size_type n, const value_type &val)
         // {
