@@ -6,7 +6,7 @@
 namespace ft
 {
 	template <typename T>
-	class RandomAccessIterator : public std::iterator<std::random_access_iterator_tag, T>
+	class RandomAccessIterator
 	{
 	public:
 		typedef typename iterator_traits<T>::value_type value_type;
@@ -14,7 +14,7 @@ namespace ft
 		typedef typename iterator_traits<T>::pointer pointer;
 		typedef typename iterator_traits<T>::reference reference;
 		typedef typename iterator_traits<T>::const_reference const_reference;
-		typedef const T *const_pointer;
+		typedef typename iterator_traits<T>::const_pointer const_pointer;
 
 		RandomAccessIterator() : _ptr(NULL) {}
 		RandomAccessIterator(T ptr) : _ptr(ptr) {}
@@ -25,7 +25,7 @@ namespace ft
 			_ptr = other._ptr;
 			return *this;
 		}
-
+		// operator const_iterator() const {return const_iterator(_ptr);}
 		reference operator*() { return *this->_ptr; }
 		const_reference operator*() const { return *this->_ptr; }
 		pointer operator->() { return _ptr; }

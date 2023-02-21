@@ -223,5 +223,11 @@ int main()
     // myvector.erase(myvector.begin() + 1, myvector.begin() + 5); //[first, last) 1, 2, 0 10
     // printVec(myvector);
     test_all();
-    return (0);
+    // ft:vector<int> vector1;
+    // vector1.push_back(1);
+    // vector1.push_back(2);
+
+    // ft::vector<int>::const_iterator const_iterator1;
+    // const_iterator1 = vector1.begin();
+    // return (0);
 }

@@ -25,7 +25,6 @@ namespace ft
 
         typedef typename Iterator::const_reference             const_reference;
 		
-
         /* The iterator category from Iterator. */
         typedef typename Iterator::iterator_category     iterator_category;
     };
