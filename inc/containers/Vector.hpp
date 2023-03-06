@@ -122,12 +122,13 @@ namespace ft
             this->_allocator.destroy(this->_data);
             this->_size = 0;
         }
-        void pop_back()
+        void pop_back(void)
         {
-            this->_smart_reAlloc(this->_size - 1);
-            for (size_type i = 0; i < this->_size - 1; i++)
-                this->_allocator.construct(&this->_data[i], this->_data[i]);
+            if (this->_size == 0)
+                return;
+            this->_allocator.destroy(this->_data + this->_size - 1);
             this->_size--;
+            this->_capacity--;
         }
         void swap(vector &vector)
         {
@@ -251,48 +252,59 @@ namespace ft
 
         iterator insert(iterator position, const value_type &val)
         {
-            _smart_reAlloc(this->_size + 1);
-            iterator new_end = std::copy(this->begin(), position + 1, position);
-            std::cout << "new_end" << *(new_end) << std::endl;
-            for (iterator it = new_end; it != this->end(); it++)
-                this->_allocator.construct(&(*(it)), *it);
-            // this->_allocator.construct(&(*(new_end + 1)), 2);
-            // this->_allocator.construct(&(*(new_end + 2)), 3);
-            // this->_allocator.construct(&(*(new_end + 3)), 4);
-            // this->_allocator.construct(&(*(new_end + 4)), 5);
-            this->_allocator.construct(&(*(new_end)), val);
-            this->_size += 1;
-            return (position);
+            size_type index = position - begin();
+            if (this->_size >= this->_capacity)
+            {
+                _smart_reAlloc(this->_size + 1);
+                position = begin() + index;
+            }
+            iterator last = end() - 1;
+            while (last >= position)
+            {
+                *(last + 1) = *last;
+                --last;
+            }
+            this->_allocator.construct(&(*(position)), val);
+            ++this->_size;
+            return (begin() + index);
         }
 
-        //         iterator insert(iterator position, const value_type& val)
-        // {
-        //     size_t index = position - this->begin();
-        //     this->resize(this->size() + 1);
-        //     position = this->begin() + index;
-        //     iterator new_end = this->end() - 1;
-        //     std::copy(position, new_end, new_end + 1);
-        //     this->_allocator.construct(&(*position), val);
-        //     return position;
-        // }
+        void insert(iterator position, size_type n, const value_type &val)
+        {
+            size_type index = position - begin();
+            if (this->_size + n > this->_capacity)
+            {
+                _smart_reAlloc(this->_size + n);
+                position = begin() + index;
+            }
+            iterator last = end() - 1;
+            while (last >= position)
+            {
+                *(last + n) = *last;
+                --last;
+            }
+            for (iterator it = position; it != position + n; ++it)
+                this->_allocator.construct(&(*it), val);
+            this->_size += n;
+        }
 
-        /*                 iterator insert(iterator position, const value_type &val)
-                {
-                    //  = std::copy(this->begin(), position, position + 1);
-                    iterator new_end = std::copy(position + 1, this->end(), position + 2);
-                    this->_allocator.construct(&(*new_end), val);
-                    this->_size += 1;
-                    return (new_end);
-                } */
+        template <class InputIterator>
+        void insert(iterator position, InputIterator first, InputIterator last, typename enable_if<!is_integral<InputIterator>::value>::type* = 0)
+        {
+                difference_type const   idx = position - this->begin();
+                difference_type const   old_end_idx = this->end() - this->begin();
+                iterator                old_end, end;
+                size_type dist = last - first;
+                this->resize(this->_size + dist);
 
-        // void insert(iterator position, size_type n, const value_type &val)
-        // {
-        // }
-
-        // template <class InputIterator>
-        // void insert(iterator position, InputIterator first, InputIterator last)
-        // {
-        // }
+                end = this->end();
+                position = this->begin() + idx;
+                old_end = this->begin() + old_end_idx;
+                while (old_end != position)
+                    *--end = *--old_end;
+                while (first != last)
+                    *position++ = *first++;
+        }
 
         bool positionCheck(size_type n)
         {

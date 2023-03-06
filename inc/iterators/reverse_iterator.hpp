@@ -76,7 +76,7 @@ namespace ft
         template <class Iterator>
         bool operator<(const reverse_iterator<Iterator>& x, const reverse_iterator<Iterator>& y)
         {
-            return y.base() < x.base();
+            return y.base() > x.base();
         }
 
         template <class Iterator>
@@ -88,13 +88,13 @@ namespace ft
         template <class Iterator>
         bool operator<=(const reverse_iterator<Iterator>& x, const reverse_iterator<Iterator>& y)
         {
-            return !(y < x);
+            return !(y >= x);
         }
 
         template <class Iterator>
         bool operator>=(const reverse_iterator<Iterator>& x, const reverse_iterator<Iterator>& y)
         {
-            return !(x < y);
+            return !(x >= y);
         }
 }
 
