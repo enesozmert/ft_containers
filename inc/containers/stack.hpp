@@ -22,14 +22,8 @@ namespace ft
 		typedef typename container_type::value_type value_type;
 		typedef typename container_type::const_reference const_reference;
 		typedef typename container_type::size_type size_type;
-		//  container_type	Container
-		//  value_type	Container::value_type
-		//  size_type	Container::size_type
-		//  reference	Container::reference
-		//  const_reference	Container::const_reference
 	protected:
 		container_type _c;
-
 	public:
 		explicit stack(const container_type &c_type = container_type()) : c(c_type) {}
 		stack(const stack &other) : _c(other._c) {}

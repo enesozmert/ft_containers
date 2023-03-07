@@ -2,143 +2,145 @@
 #include <vector>
 #include "test.hpp"
 #include "../inc/containers/vector.hpp"
+#include "../inc/tree/RBTree.hpp"
+#include "../inc/tree/RBTreeNode.hpp"
 
 using namespace ft;
 
-void print_my_vector(ft::vector<int> v)
-{
-    ft::vector<int>::iterator it = v.begin();
-    std::cout << "print MY vector";
-    std::cout << "\n-------------\n";
-    std::cout << "capacity: " << v.capacity() << " size: " << v.size() << std::endl;
+// void print_my_vector(ft::vector<int> v)
+// {
+//     ft::vector<int>::iterator it = v.begin();
+//     std::cout << "print MY vector";
+//     std::cout << "\n-------------\n";
+//     std::cout << "capacity: " << v.capacity() << " size: " << v.size() << std::endl;
 
-    std::cout << "datas ---> ";
-    while (it != v.end())
-        std::cout << *it++ << " ";
-    std::cout << "\n-------------\n";
-}
+//     std::cout << "datas ---> ";
+//     while (it != v.end())
+//         std::cout << *it++ << " ";
+//     std::cout << "\n-------------\n";
+// }
 
-void print_orj_vector(std::vector<int> v)
-{
-    std::vector<int>::iterator it = v.begin();
-    std::cout << "print ORJ vector";
-    std::cout << "\n-------------\n";
-    std::cout << "capacity: " << v.capacity() << " size: " << v.size() << std::endl;
+// void print_orj_vector(std::vector<int> v)
+// {
+//     std::vector<int>::iterator it = v.begin();
+//     std::cout << "print ORJ vector";
+//     std::cout << "\n-------------\n";
+//     std::cout << "capacity: " << v.capacity() << " size: " << v.size() << std::endl;
 
-    std::cout << "datas ---> ";
-    while (it != v.end())
-        std::cout << *it++ << " ";
-    std::cout << "\n-------------\n";
-}
+//     std::cout << "datas ---> ";
+//     while (it != v.end())
+//         std::cout << *it++ << " ";
+//     std::cout << "\n-------------\n";
+// }
 
-int main()
-{
-// ft::vector<int> myVecInsert;
+// int main()
+// {
+// // ft::vector<int> myVecInsert;
+// //     std::vector<int> orjVecInsert;
+
+//     // myVecInsert.push_back(1);
+//     // myVecInsert.push_back(2);
+//     // myVecInsert.push_back(3);
+//     // print_my_vector(myVecInsert);
+
+//     // orjVecInsert.push_back(1);
+//     // orjVecInsert.push_back(2);
+//     // orjVecInsert.push_back(3);
+//     // print_orj_vector(orjVecInsert);
+
+//     // std::cout<<"insertion starting~~~~~~~~>";
+//     // myVecInsert.insert(myVecInsert.begin(), -1);
+//     // print_my_vector(myVecInsert);
+//     // orjVecInsert.insert(orjVecInsert.begin(), -1);
+//     // print_orj_vector(orjVecInsert);
+
+//     // std::cout<<"insertion starting~~~~~~~~>";
+//     // myVecInsert.insert(myVecInsert.begin(), -1);
+//     // print_my_vector(myVecInsert);
+//     // orjVecInsert.insert(orjVecInsert.begin(), -1);
+//     // print_orj_vector(orjVecInsert);
+
+//     // std::cout<<"insertion starting~~~~~~~~>";
+//     // myVecInsert.insert(myVecInsert.begin() + 2, 200);
+//     // print_my_vector(myVecInsert);
+//     // orjVecInsert.insert(orjVecInsert.begin() + 2, 200);
+//     // print_orj_vector(orjVecInsert);
+
+//     // myVecInsert.insert(myVecInsert.end(), 400);
+//     // print_my_vector(myVecInsert);
+//     // orjVecInsert.insert(orjVecInsert.end(), 400);
+//     // print_orj_vector(orjVecInsert);
+
+//     // std::cout<<"insertion starting~~~~~~~~>";
+//     // myVecInsert.insert(myVecInsert.begin() + 2, 5, 200);
+//     // print_my_vector(myVecInsert);
+//     // orjVecInsert.insert(orjVecInsert.begin() + 2, 5, 200);
+//     // print_orj_vector(orjVecInsert);
+
+//         ft::vector<int> myVecInsert;
 //     std::vector<int> orjVecInsert;
 
-    // myVecInsert.push_back(1);
-    // myVecInsert.push_back(2);
-    // myVecInsert.push_back(3);
-    // print_my_vector(myVecInsert);
+//     myVecInsert.insert(myVecInsert.begin(), 0);
+//     print_my_vector(myVecInsert);
+//     orjVecInsert.insert(orjVecInsert.begin(), 0);
+//     print_orj_vector(orjVecInsert);
 
-    // orjVecInsert.push_back(1);
-    // orjVecInsert.push_back(2);
-    // orjVecInsert.push_back(3);
-    // print_orj_vector(orjVecInsert);
+//     myVecInsert.push_back(1);
+//     myVecInsert.push_back(2);
+//     myVecInsert.push_back(3);
+//     print_my_vector(myVecInsert);
 
-    // std::cout<<"insertion starting~~~~~~~~>";
-    // myVecInsert.insert(myVecInsert.begin(), -1);
-    // print_my_vector(myVecInsert);
-    // orjVecInsert.insert(orjVecInsert.begin(), -1);
-    // print_orj_vector(orjVecInsert);
+//     orjVecInsert.push_back(1);
+//     orjVecInsert.push_back(2);
+//     orjVecInsert.push_back(3);
+//     print_orj_vector(orjVecInsert);
 
-    // std::cout<<"insertion starting~~~~~~~~>";
-    // myVecInsert.insert(myVecInsert.begin(), -1);
-    // print_my_vector(myVecInsert);
-    // orjVecInsert.insert(orjVecInsert.begin(), -1);
-    // print_orj_vector(orjVecInsert);
+//     std::cout<<"insertion starting~~~~~~~~>";
+//     myVecInsert.insert(myVecInsert.begin(), -1);
+//     print_my_vector(myVecInsert);
+//     orjVecInsert.insert(orjVecInsert.begin(), -1);
+//     print_orj_vector(orjVecInsert);
 
-    // std::cout<<"insertion starting~~~~~~~~>";
-    // myVecInsert.insert(myVecInsert.begin() + 2, 200);
-    // print_my_vector(myVecInsert);
-    // orjVecInsert.insert(orjVecInsert.begin() + 2, 200);
-    // print_orj_vector(orjVecInsert);
+//     myVecInsert.insert(myVecInsert.begin() + 2, 200);
+//     print_my_vector(myVecInsert);
+//     orjVecInsert.insert(orjVecInsert.begin() + 2, 200);
+//     print_orj_vector(orjVecInsert);
 
-    // myVecInsert.insert(myVecInsert.end(), 400);
-    // print_my_vector(myVecInsert);
-    // orjVecInsert.insert(orjVecInsert.end(), 400);
-    // print_orj_vector(orjVecInsert);
+//     myVecInsert.insert(myVecInsert.end(), 5);
+//     print_my_vector(myVecInsert);
+//     orjVecInsert.insert(orjVecInsert.end(), 5);
+//     print_orj_vector(orjVecInsert);
 
-    // std::cout<<"insertion starting~~~~~~~~>";
-    // myVecInsert.insert(myVecInsert.begin() + 2, 5, 200);
-    // print_my_vector(myVecInsert);
-    // orjVecInsert.insert(orjVecInsert.begin() + 2, 5, 200);
-    // print_orj_vector(orjVecInsert);
-
-        ft::vector<int> myVecInsert;
-    std::vector<int> orjVecInsert;
-
-    myVecInsert.insert(myVecInsert.begin(), 0);
-    print_my_vector(myVecInsert);
-    orjVecInsert.insert(orjVecInsert.begin(), 0);
-    print_orj_vector(orjVecInsert);
-
-    myVecInsert.push_back(1);
-    myVecInsert.push_back(2);
-    myVecInsert.push_back(3);
-    print_my_vector(myVecInsert);
-
-    orjVecInsert.push_back(1);
-    orjVecInsert.push_back(2);
-    orjVecInsert.push_back(3);
-    print_orj_vector(orjVecInsert);
-
-    std::cout<<"insertion starting~~~~~~~~>";
-    myVecInsert.insert(myVecInsert.begin(), -1);
-    print_my_vector(myVecInsert);
-    orjVecInsert.insert(orjVecInsert.begin(), -1);
-    print_orj_vector(orjVecInsert);
-
-    myVecInsert.insert(myVecInsert.begin() + 2, 200);
-    print_my_vector(myVecInsert);
-    orjVecInsert.insert(orjVecInsert.begin() + 2, 200);
-    print_orj_vector(orjVecInsert);
-
-    myVecInsert.insert(myVecInsert.end(), 5);
-    print_my_vector(myVecInsert);
-    orjVecInsert.insert(orjVecInsert.end(), 5);
-    print_orj_vector(orjVecInsert);
-
-    myVecInsert.insert(myVecInsert.end() - 1, 4);
-    print_my_vector(myVecInsert);
-    orjVecInsert.insert(orjVecInsert.end() - 1, 4);
-    print_orj_vector(orjVecInsert);
+//     myVecInsert.insert(myVecInsert.end() - 1, 4);
+//     print_my_vector(myVecInsert);
+//     orjVecInsert.insert(orjVecInsert.end() - 1, 4);
+//     print_orj_vector(orjVecInsert);
 
 
 
 
-    std::cout<< "***insert with 3 parameters***\n" <<std::endl;
+//     std::cout<< "***insert with 3 parameters***\n" <<std::endl;
 
-    myVecInsert.insert(myVecInsert.begin(), 2, -3);
-    print_my_vector(myVecInsert);
-    orjVecInsert.insert(orjVecInsert.begin(), 2, -3);
-    print_orj_vector(orjVecInsert);
+//     myVecInsert.insert(myVecInsert.begin(), 2, -3);
+//     print_my_vector(myVecInsert);
+//     orjVecInsert.insert(orjVecInsert.begin(), 2, -3);
+//     print_orj_vector(orjVecInsert);
 
-    myVecInsert.insert(myVecInsert.begin() + 1, 2, -2);
-    print_my_vector(myVecInsert);
-    orjVecInsert.insert(orjVecInsert.begin() + 1, 2, -2);
-    print_orj_vector(orjVecInsert);
+//     myVecInsert.insert(myVecInsert.begin() + 1, 2, -2);
+//     print_my_vector(myVecInsert);
+//     orjVecInsert.insert(orjVecInsert.begin() + 1, 2, -2);
+//     print_orj_vector(orjVecInsert);
 
-    myVecInsert.insert(myVecInsert.begin() + 1, 0, 9999);
-    print_my_vector(myVecInsert);
-    orjVecInsert.insert(orjVecInsert.begin() + 1, 0, 9999);
-    print_orj_vector(orjVecInsert);
+//     myVecInsert.insert(myVecInsert.begin() + 1, 0, 9999);
+//     print_my_vector(myVecInsert);
+//     orjVecInsert.insert(orjVecInsert.begin() + 1, 0, 9999);
+//     print_orj_vector(orjVecInsert);
 
-    myVecInsert.insert(myVecInsert.end() - 1, 2, 7777);
-    print_my_vector(myVecInsert);
-    orjVecInsert.insert(orjVecInsert.end() - 1, 2, 7777);
-    print_orj_vector(orjVecInsert);
-}
+//     myVecInsert.insert(myVecInsert.end() - 1, 2, 7777);
+//     print_my_vector(myVecInsert);
+//     orjVecInsert.insert(orjVecInsert.end() - 1, 2, 7777);
+//     print_orj_vector(orjVecInsert);
+// }
 
 // int main()
 // {
@@ -171,3 +173,25 @@ int main()
 //     // test_all();
 //     return (0);
 // }
+
+int main()
+{
+    RBTree tree;
+
+    tree.insert(10);
+    tree.insert(11);
+    tree.insert(12);
+    tree.insert(13);
+    tree.insert(1);
+    tree.insert(14);
+    tree.insert(15);
+    tree.insert(9);
+    tree.insert(8);
+    tree.insert(7);
+    Node *search_node = tree.search(19);
+    if (search_node != NULL)
+        std::cout << "founded" << std::endl;
+    else if (search_node == NULL)
+        std::cout << "not found" << std::endl;
+    tree.printRBTree(tree.getRoot());
+}
