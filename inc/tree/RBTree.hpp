@@ -3,20 +3,45 @@
 
 #include "RBTreeNode.hpp"
 #include <iostream>
+#include <stddef.h>
+#include <memory>
 
-class RBTree
+namespace ft
 {
+    // template <class T, class Alloc = std::allocator<T> >
+    class RBTree
+    {
     private:
-        Node *root;
+        // typedef T value_type;
+        // typedef Alloc allocator_type;                            //
+        // typedef typename Alloc::reference reference;             // Reference to element
+        // typedef typename Alloc::const_reference const_reference; // Reference to constant element
+        // typedef typename Alloc::pointer pointer;                 // Pointer to element
+        // typedef typename Alloc::const_pointer const_pointer;     // Pointer to const element
+    private:
+        Node *_root;
+        Node *_end;
+        Node *_last;
         RBTreeNode::Color currentColor;
+        RBTreeNode::Color rootColor;
         RBTreeNode::Color nilColor;
+        // allocator_type _allocator;
     public:
         // form;
-        RBTree() : root(NULL), currentColor(RBTreeNode::RED), nilColor(RBTreeNode::BLACK)
+        RBTree() : _root(NULL), _end(NULL), _last(NULL)
         {
             currentColor = RBTreeNode::RED;
             nilColor = RBTreeNode::BLACK;
+            rootColor = RBTreeNode::BLACK;
+
+            // createNode(&this->_end, getRoot(), _allocator);
+            // _end->color = BLACK;
         }
+        // RBTree(const allocator_type& _alloc = allocator_type()) : _allocator(_alloc)
+        // {
+        //     create_node(&this->_end, _Val(), _allocator);
+        //     _end->color = BLACK;
+        // }
         RBTree(RBTree const &rBTree)
         {
             *this = rBTree;
@@ -25,31 +50,50 @@ class RBTree
         {
             if (this == &rBTree)
                 return (*this);
-            root = rBTree.root;
+            _root = rBTree._root;
             return (*this);
         }
-        ~RBTree(){}
+        ~RBTree() {}
+
     public:
-        //get-set
+        // get-set
         Node *getRoot()
         {
-            return (root);
+            return (_root);
         }
-    private:
+
+        Node *getLast()
+        {
+            return (_last);
+        }
+
+    public:
         // rules;
+        bool isRootColorBlack(Node &node)
+        {
+            // (void)node;
+            // 1. olarak yazılır/kullanılır;
+            if (node.color != RBTreeNode::BLACK)
+                return (false);
+            return (true);
+        }
         bool isCurrentColorRed(Node &node)
         {
-            (void)node;
+            // (void)node;
             // 1. olarak yazılır/kullanılır;
+            if (node.color != RBTreeNode::RED)
+                return (false);
             return (true);
         }
         bool isRootChildColorRed(Node &node)
         {
-            (void)node;
+            // (void)node;
             // 1. olarak yazılır/kullanılır;
+            if (node.parent && node.parent->color == RBTreeNode::RED && node.color == RBTreeNode::RED)
+                return (false);
             return (true);
         }
-        bool isRootToNilBlackCount(Node &node)
+        bool isRootToNilBlackEqualCount(Node &node)
         {
             (void)node;
             // 1. olarak yazılır/kullanılır;
@@ -64,13 +108,41 @@ class RBTree
                 return (0);
             return (1 + std::max(getHeight(root->left), getHeight(root->right)));
         }
+        Node *getMax(Node *root)
+        {
+            if (!root || !root->right)
+                return (root);
+            return getMax(root->right);
+        }
+        Node *getMin(Node *root)
+        {
+            if (!root || !root->left)
+                return (root);
+            return getMin(root->left);
+        }
+        void changeColor(Node *node)
+        {
+            (void)node;
+        }
+        void rootChangeColor(Node *root)
+        {
+            if (root != NULL)
+                root->color = BLACK;
+        }
+        void lastedNode(Node *lastNode)
+        {
+            _last = search(lastNode->key);
+            // std::string color = _last->parent->color == RBTreeNode::RED ? "RED" : "BLACK";
+            // std::cout << "last color : " << color << "num" << _last->parent->key << std::endl;
+        }
+
     public:
-        //tree user utils
+        // tree user utils
         void printRBTree(Node *root, int space = 0, int height = 10, int distance = 5)
         {
-            height = getHeight(root);
+            height = getHeight(_root);
             distance = height / 2;
-            if (root == NULL)
+            if (_root == NULL)
                 return;
             space += distance;
             printRBTree(root->right, space, height, distance);
@@ -82,6 +154,29 @@ class RBTree
 
             printRBTree(root->left, space, height, distance);
         }
+        void printHelper(Node *root, std::string indent, bool last)
+        {
+            if (root != NULL)
+            {
+                std::cout << indent;
+                if (last)
+                {
+                    std::cout << "R----";
+                    indent += "   ";
+                }
+                else
+                {
+                    std::cout << "L----";
+                    indent += "|  ";
+                }
+
+                std::string sColor = root->color == RBTreeNode::RED ? "RED" : "BLACK";
+                std::cout << root->key << "(" << sColor << ")" << std::endl;
+                printHelper(root->left, indent, false);
+                printHelper(root->right, indent, true);
+            }
+        }
+
     public:
         // tree rotate;
         void rotateLeft(Node *ptr)
@@ -92,8 +187,8 @@ class RBTree
             if (ptr->right != NULL)
                 ptr->right->parent = ptr;
             right_child->parent = ptr->parent;
-            if (ptr->parent == NULL)
-                root = right_child;
+            if (ptr->parent == _end)
+                _end->left = right_child;
             else if (ptr == ptr->parent->left)
                 ptr->parent->left = right_child;
             else
@@ -109,7 +204,9 @@ class RBTree
                 ptr->left->parent = ptr;
             left_child->parent = ptr->parent;
             if (ptr->parent == NULL)
-                root = left_child;
+                _root = left_child;
+            if (ptr->parent == _end)
+                _end->left = left_child;
             else if (ptr == ptr->parent->left)
                 ptr->parent->left = left_child;
             else
@@ -144,7 +241,7 @@ class RBTree
     public:
         Node *search(const int &n)
         {
-            Node *current = root;
+            Node *current = _root;
             while (current != NULL)
             {
                 if (current->key == n)
@@ -164,7 +261,7 @@ class RBTree
         {
             Node *ptr = new Node(key);
             Node *parent = NULL;
-            Node *current = root;
+            Node *current = _root;
 
             while (current != NULL)
             {
@@ -176,16 +273,21 @@ class RBTree
             }
             ptr->parent = parent;
             if (parent == NULL)
-                root = ptr;
+            {
+                _root = ptr;
+                _root->parent = NULL;
+            }
             else if (ptr->key < parent->key)
                 parent->left = ptr;
             else
                 parent->right = ptr;
-
+            if (ptr != NULL && ptr->parent != NULL)
+                lastedNode(ptr);
             // selectState
             // isAllFunction
             // fixValidation for is
             // checkValidation
+            rootChangeColor(_root);
             return;
         }
         void delone(const int &key)
@@ -193,6 +295,7 @@ class RBTree
             (void)key;
             return;
         }
-};
+    };
+}
 
 #endif

@@ -178,20 +178,15 @@ int main()
 {
     RBTree tree;
 
-    tree.insert(10);
-    tree.insert(11);
-    tree.insert(12);
-    tree.insert(13);
-    tree.insert(1);
-    tree.insert(14);
-    tree.insert(15);
-    tree.insert(9);
-    tree.insert(8);
-    tree.insert(7);
-    Node *search_node = tree.search(19);
-    if (search_node != NULL)
-        std::cout << "founded" << std::endl;
-    else if (search_node == NULL)
-        std::cout << "not found" << std::endl;
-    tree.printRBTree(tree.getRoot());
+    tree.insert(6);
+    tree.insert(2);
+    tree.insert(4);
+    // Node *search_node = tree.search(1);
+    // if (search_node != NULL)
+    //     std::cout << "founded" << std::endl;
+    // else if (search_node == NULL)
+    //     std::cout << "not found" << std::endl;
+    std::cout << tree.isRootChildColorRed(*tree.getLast()) << std::endl;
+    tree.printHelper(tree.getRoot(), "", true);
+    // tree.printRBTree(tree.getRoot());
 }
