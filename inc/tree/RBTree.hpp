@@ -13,11 +13,7 @@ namespace ft
     {
     private:
         // typedef T value_type;
-        // typedef Alloc allocator_type;                            //
-        // typedef typename Alloc::reference reference;             // Reference to element
-        // typedef typename Alloc::const_reference const_reference; // Reference to constant element
-        // typedef typename Alloc::pointer pointer;                 // Pointer to element
-        // typedef typename Alloc::const_pointer const_pointer;     // Pointer to const element
+ bv
     private:
         Node *_root;
         Node *_end;
@@ -93,10 +89,62 @@ namespace ft
                 return (false);
             return (true);
         }
-        bool isRootToNilBlackEqualCount(Node &node)
+        bool isRootToLeafBlackEqualCount(Node &node)//?
         {
-            (void)node;
-            // 1. olarak yazılır/kullanılır;
+            int blackCount = 0;
+
+            Node* currNode = &node;
+            while (currNode != NULL)
+            {
+                if (currNode->color == BLACK)
+                    blackCount++;
+                // Leaf node is reached
+                if (currNode->left == NULL && currNode->right == NULL)
+                    break;
+                // Only one child is present and it is red
+                if ((currNode->left != NULL && currNode->left->color == RED && currNode->right == NULL) ||
+                    (currNode->right != NULL && currNode->right->color == RED && currNode->left == NULL))
+                    break;
+                // If both children are present and are black, move to the left child
+                if (currNode->left != NULL && currNode->right != NULL && 
+                    currNode->left->color == BLACK && currNode->right->color == BLACK)
+                    currNode = currNode->left;
+                else if (currNode->left != NULL && currNode->left->color == RED) // Move to the left child if it is red
+                    currNode = currNode->left;
+                else if (currNode->right != NULL && currNode->right->color == RED) // Move to the right child if it is red
+                    currNode = currNode->right;
+                else
+                    break; // If any of the above conditions are not satisfied, break the loop
+            }
+            // Check if the number of black nodes on this path is equal to the count of black nodes on other paths
+            Node* leafNode = currNode;
+            int leafToRootBlackCount = 0;
+            while (leafNode != NULL && leafNode != &node)
+            {
+                if (leafNode->color == BLACK)
+                    leafToRootBlackCount++;
+
+                leafNode = leafNode->parent;
+            }
+            return (leafToRootBlackCount == blackCount);
+        }
+        bool isLeftLeftCase(Node *nodeLeft)//right rot
+        {
+            if (!(nodeLeft->left && nodeLeft->key && nodeLeft->left->key))
+                return (false);
+            return (true);
+        }
+        bool isRightLeftCase(Node *node)//
+        {
+            if (!(node->parent != NULL && node->parent->parent != NULL &&
+                 node->parent == node->parent->parent->left && node == node->parent->right))
+                return (false);
+            return (true);
+        }
+        bool isRightRightCase(Node *nodeRight)//left
+        {
+            if (!(nodeRight->right && nodeRight->key && nodeRight->right->key))
+                return (false);
             return (true);
         }
 
@@ -218,7 +266,10 @@ namespace ft
     private:
         void fixValidation(Node &node)
         {
-            (void)node;
+            while (node->parent != NULL && node->parent->color == RED)
+            {
+                isLeft
+            }
             // 3. olarak yazılır/kullanılır; true => devam , false
         }
         bool checkValidation(Node &node)
