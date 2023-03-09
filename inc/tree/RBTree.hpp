@@ -13,7 +13,6 @@ namespace ft
     {
     private:
         // typedef T value_type;
- bv
     private:
         Node *_root;
         Node *_end;
@@ -186,22 +185,22 @@ namespace ft
 
     public:
         // tree user utils
-        void printRBTree(Node *root, int space = 0, int height = 10, int distance = 5)
-        {
-            height = getHeight(_root);
-            distance = height / 2;
-            if (_root == NULL)
-                return;
-            space += distance;
-            printRBTree(root->right, space, height, distance);
+        // void printRBTree(Node *root, int space = 0, int height = 10, int distance = 5)
+        // {
+        //     height = getHeight(_root);
+        //     distance = height / 2;
+        //     if (root == NULL)
+        //         return;
+        //     space += distance;
+        //     printRBTree(root->right, space, height, distance);
 
-            std::cout << std::endl;
-            for (int i = distance; i < space; i++)
-                std::cout << " ";
-            std::cout << root->key << (root->color == BLACK ? "B" : "R") << std::endl;
+        //     std::cout << std::endl;
+        //     for (int i = distance; i < space; i++)
+        //         std::cout << " ";
+        //     std::cout << root->key << (root->color == BLACK ? "B" : "R") << std::endl;
 
-            printRBTree(root->left, space, height, distance);
-        }
+        //     printRBTree(root->left, space, height, distance);
+        // }
         void printHelper(Node *root, std::string indent, bool last)
         {
             if (root != NULL)
@@ -266,10 +265,10 @@ namespace ft
     private:
         void fixValidation(Node &node)
         {
-            while (node->parent != NULL && node->parent->color == RED)
-            {
-                isLeft
-            }
+            // while (node.parent != NULL && node.parent->color == RED)
+            // {
+            // }
+            selectState(node);
             // 3. olarak yazılır/kullanılır; true => devam , false
         }
         bool checkValidation(Node &node)
@@ -285,7 +284,11 @@ namespace ft
         int selectState(Node &node)
         {
             // 2. olarak yazılır/kullanılır;
-            (void)node;
+            // (void)node;
+            // if (isLeftLeftCase(&node))
+                rotateRight(&node);
+            // if (isRightRightCase(&node))
+                // rotateLeft(&node);
             return (0);
         }
 

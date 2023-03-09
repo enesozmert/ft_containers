@@ -181,6 +181,8 @@ int main()
     tree.insert(6);
     tree.insert(2);
     tree.insert(4);
+    tree.insert(5);
+    tree.insert(3);
     // Node *search_node = tree.search(1);
     // if (search_node != NULL)
     //     std::cout << "founded" << std::endl;
