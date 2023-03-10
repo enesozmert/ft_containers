@@ -256,6 +256,7 @@ namespace ft
             if (this->_size >= this->_capacity)
             {
                 _smart_reAlloc(this->_size + 1);
+                
                 position = begin() + index;
             }
             iterator last = end() - 1;

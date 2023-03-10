@@ -5,21 +5,19 @@
 #include <stddef.h>
 #include <memory>
 
-enum Color {RED, BLACK};
 
-struct Node
+namespace ft
 {
-    int key;
-    Color color;
-    Node *left, *right, *parent;
-    Node(int key) : key(key), color(RED), left(NULL), right(NULL), parent(NULL) {}
-};
+    enum Color {RED, BLACK};
 
-template<typename T, typename Value, typename Alloc>
-void createNode(T * node, Value value, Alloc allocator)
-{
-    *node = allocator.allocate(1);
-    allocator.construct(*node, value);
+    template <class T>
+    struct Node
+    {
+        T key;
+        Color color;
+        Node *left, *right, *parent;
+        Node(T key) : key(key), color(RED), left(NULL), right(NULL), parent(NULL) {}
+    };
 }
 
 #endif

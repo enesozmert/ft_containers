@@ -176,7 +176,7 @@ using namespace ft;
 
 int main()
 {
-    RBTree tree;
+    RBTree<int> tree;
 
     tree.insert(6);
     tree.insert(2);
@@ -188,7 +188,9 @@ int main()
     //     std::cout << "founded" << std::endl;
     // else if (search_node == NULL)
     //     std::cout << "not found" << std::endl;
-    std::cout << tree.isRootChildColorRed(*tree.getLast()) << std::endl;
+    std::cout << tree.isRootChildColorRed(tree.getLast()) << std::endl;
     tree.printHelper(tree.getRoot(), "", true);
     // tree.printRBTree(tree.getRoot());
 }
+
+
