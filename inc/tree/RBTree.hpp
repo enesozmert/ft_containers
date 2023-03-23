@@ -19,11 +19,14 @@ namespace ft
         typedef typename Alloc::const_reference const_reference;                 // Reference to constant element
         typedef typename Alloc::pointer pointer;                                 // Pointer to element
         typedef typename Alloc::const_pointer const_pointer;                     // Pointer to const element
+        typedef	ft::reverse_iterator<iterator> reverse_iterator;
+		typedef	ft::reverse_iterator<const_iterator> const_reverse_iterator;
         typedef ft::Node<T> *nodeType;
 
     private:
         nodeType _root;
-        nodeType _end;
+        nodeType _header;
+        nodeType _nil;
         nodeType _last;
         ft::Color currentColor;
         ft::Color rootColor;
@@ -98,64 +101,10 @@ namespace ft
                 return (false);
             return (true);
         }
-        bool isRootToLeafBlackEqualCount(nodeType &node) //?
-        {
-            int blackCount = 0;
 
-            nodeType *currNode = &node;
-            while (currNode != NULL)
-            {
-                if (currNode->color == ft::BLACK)
-                    blackCount++;
-                // Leaf node is reached
-                if (currNode->left == NULL && currNode->right == NULL)
-                    break;
-                // Only one child is present and it is red
-                if ((currNode->left != NULL && currNode->left->color == RED && currNode->right == NULL) ||
-                    (currNode->right != NULL && currNode->right->color == RED && currNode->left == NULL))
-                    break;
-                // If both children are present and are black, move to the left child
-                if (currNode->left != NULL && currNode->right != NULL &&
-                    currNode->left->color == ft::BLACK && currNode->right->color == ft::BLACK)
-                    currNode = currNode->left;
-                else if (currNode->left != NULL && currNode->left->color == ft::RED) // Move to the left child if it is red
-                    currNode = currNode->left;
-                else if (currNode->right != NULL && currNode->right->color == ft::RED) // Move to the right child if it is red
-                    currNode = currNode->right;
-                else
-                    break; // If any of the above conditions are not satisfied, break the loop
-            }
-            // Check if the number of black nodes on this path is equal to the count of black nodes on other paths
-            nodeType *leafNode = currNode;
-            int leafToRootBlackCount = 0;
-            while (leafNode != NULL && leafNode != &node)
-            {
-                if (leafNode->color == ft::BLACK)
-                    leafToRootBlackCount++;
-
-                leafNode = leafNode->parent;
-            }
-            return (leafToRootBlackCount == blackCount);
-        }
-        bool isLeftLeftCase(nodeType nodeLeft) // right rot
-        {
-            if (!(nodeLeft->left && nodeLeft->key && nodeLeft->left->key))
-                return (false);
-            return (true);
-        }
-        bool isRightLeftCase(nodeType node) //
-        {
-            if (!(node->parent != NULL && node->parent->parent != NULL &&
-                  node->parent == node->parent->parent->left && node == node->parent->right))
-                return (false);
-            return (true);
-        }
-        bool isRightRightCase(nodeType nodeRight) // left
-        {
-            if (!(nodeRight->right && nodeRight->key && nodeRight->right->key))
-                return (false);
-            return (true);
-        }
+        bool is_nil(nodeType node) const {
+			return node == _nil || node == _header;
+		}
 
     private:
         // tree utils;
@@ -227,22 +176,21 @@ namespace ft
         // tree rotate;
         void rotateLeft(nodeType ptr)
         {
-            nodeType right_child = ptr->right;
-            ptr->right = right_child->left;
+            nodeType y;
 
-            if (ptr->right != NULL)
-                ptr->right->parent = ptr;
-            right_child->parent = ptr->parent;
-            if (ptr->parent == _end)
-                _end->left = right_child;
-            if (ptr->parent == NULL)
-                _root = right_child;
-            else if (isRightRightCase(ptr))
-                ptr->parent->left = right_child;
-            else
-                ptr->parent->right = right_child;
-            right_child->left = ptr;
-            ptr->parent = right_child;
+			y = node->right;
+			node->right = y->left;
+			if (!is_nil(y->left))
+				y->left->parent = node;
+			y->parent = node->parent;
+			if (node->parent == NULL)
+				_root = y;
+			else if (node == node->parent->left)
+				node->parent->left = y;
+			else
+				node->parent->right = y;
+			y->left = node;
+			node->parent = y;
         }
         void rotateRight(nodeType ptr)
         {
