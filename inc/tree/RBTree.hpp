@@ -2,67 +2,104 @@
 #define RBTREE_HPP
 
 #include "RBTreeNode.hpp"
+#include "../iterators/rb_iterator.hpp"
 #include <iostream>
 #include <stddef.h>
 #include <memory>
 
 namespace ft
 {
-    template <class T, class Alloc = std::allocator<T> >
+    template <typename T, typename Compare = std::less<T>, typename Alloc = std::allocator<T> >
     class RBTree
     {
     private:
         // tpyedef include
+        typedef ft::RBTreeNode<T> node_type;
         typedef T value_type;
-        typedef typename Alloc::template rebind<Node<T> >::other allocator_type; //
-        typedef typename Alloc::reference reference;                             // Reference to element
-        typedef typename Alloc::const_reference const_reference;                 // Reference to constant element
-        typedef typename Alloc::pointer pointer;                                 // Pointer to element
-        typedef typename Alloc::const_pointer const_pointer;                     // Pointer to const element
-        typedef	ft::reverse_iterator<iterator> reverse_iterator;
-		typedef	ft::reverse_iterator<const_iterator> const_reverse_iterator;
-        typedef ft::Node<T> *nodeType;
+        typedef Compare value_compare;
+        typedef Alloc allocator_type;
+        typedef typename allocator_type::template rebind<node_type>::other node_allocator_type;
+        typedef typename allocator_type::pointer pointer;
+        typedef typename allocator_type::const_pointer const_pointer;
+        typedef typename allocator_type::reference reference;
+        typedef typename allocator_type::const_reference const_reference;
+        typedef typename allocator_type::size_type size_type;
+        typedef typename allocator_type::difference_type difference_type;
+        typedef typename node_type::node_ptr node_ptr;
+        typedef typename node_type::const_node_ptr const_node_ptr;
+
+        typedef ft::rb_iterator<node_ptr, value_type> iterator;
+        typedef ft::rb_iterator<const_node_ptr, value_type> const_iterator;
+        typedef ft::reverse_iterator<iterator> reverse_iterator;
+        typedef ft::reverse_iterator<const_iterator> const_reverse_iterator;
 
     private:
-        nodeType _root;
-        nodeType _header;
-        nodeType _nil;
-        nodeType _last;
-        ft::Color currentColor;
-        ft::Color rootColor;
-        ft::Color nilColor;
+        size_type _size;
+        node_type _parent;
+        node_ptr _begin_node;
+        value_compare _compare;
         allocator_type _allocator;
-        size_t _count;
+        node_allocator_type _node_allocator;
 
+        /*
+         * Member functions :
+         */
     public:
-        // form;
-        RBTree() : _root(NULL), _end(NULL), _last(NULL), _allocator()
-        {
-            currentColor = ft::RED;
-            nilColor = ft::BLACK;
-            rootColor = ft::BLACK;
+        // Constructors
+        RBtree(const value_compare &comp, const allocator_type &alloc)
+            : _size(), _parent(), _begin_node(&_parent), _compare(comp), _allocator(alloc), _node_allocator(alloc) {}
 
-            createNode(&this->_end, T());
-            _end->color = ft::BLACK;
-        }
-        // RBTree(const allocator_type& _alloc = allocator_type()) : _root(NULL), _end(NULL), _last(NULL), _allocator(_alloc)
-        // {
-        //     create_node(&this->_end, getRoot(), _allocator);
-        //     _end->color = BLACK;
-        // }ı
-        RBTree(RBTree const &rBTree)
+        RBtree(const RBtree &t)
+            : _size(), _parent(), _begin_node(&_parent), _compare(t._compare), _allocator(t._allocator), _node_allocator(t._node_allocator)
         {
-            *this = rBTree;
+            if (t.root() != NULL)
+            {
+                this->root() = this->copy(t.root());
+                this->root()->_parent = &this->_parent;
+            }
         }
-        RBTree &operator=(RBTree const &rBTree)
-        {
-            if (this == &rBTree)
-                return (*this);
-            _root = rBTree._root;
-            return (*this);
-        }
-        ~RBTree() {}
 
+        // Destructor
+        ~RBtree()
+        {
+            if (this->root() != NULL)
+            {
+                this->destroy(this->root());
+                this->root() = NULL;
+                this->_begin_node = this->end_node();
+            }
+        }
+
+        // Operator Overload
+        RBtree &operator=(const RBtree &t)
+        {
+            if (this != &t)
+            {
+                this->clear();
+                this->_compare = t._compare;
+                if (t.root() != NULL)
+                {
+                    this->root() = this->copy(t.root());
+                    this->root()->_parent = &this->_parent;
+                }
+            }
+            return *this;
+        }
+    public:
+        // Iterators
+		iterator begin() { return iterator(this->_begin_node); }
+		const_iterator begin() const { return const_iterator(this->_begin_node); }
+		iterator end() { return iterator(&this->_parent); }
+		const_iterator end() const { return const_iterator(&this->_parent); }
+		reverse_iterator rbegin() { return reverse_iterator(this->end()); }
+		const_reverse_iterator rbegin() const { return const_reverse_iterator(this->end()); }
+		reverse_iterator rend() { return reverse_iterator(this->begin()); }
+		const_reverse_iterator rend() const { return const_reverse_iterator(this->begin()); }
+
+		// Capacity
+		bool empty() const { return this->_size == 0; }
+		size_type size() const { return this->_size; }
+		size_type max_size() const { return this->_allocator.max_size() / 5; }
     public:
         // get-set
         nodeType getRoot()
@@ -102,9 +139,10 @@ namespace ft
             return (true);
         }
 
-        bool is_nil(nodeType node) const {
-			return node == _nil || node == _header;
-		}
+        bool is_nil(nodeType node) const
+        {
+            return node == _nil || node == _header;
+        }
 
     private:
         // tree utils;
@@ -174,42 +212,35 @@ namespace ft
 
     public:
         // tree rotate;
-        void rotateLeft(nodeType ptr)
-        {
-            nodeType y;
-
-			y = node->right;
-			node->right = y->left;
-			if (!is_nil(y->left))
-				y->left->parent = node;
-			y->parent = node->parent;
-			if (node->parent == NULL)
-				_root = y;
-			else if (node == node->parent->left)
-				node->parent->left = y;
+        void rotate_left(node_ptr node)
+		{
+			node_ptr right_node = node->_right;
+			node->_right = right_node->_left;
+			if (node->_right != NULL)
+				node->_right->_parent = node;
+			right_node->_parent = node->_parent;
+			if (tree_is_left_child<value_type>(node))
+				node->_parent->_left = right_node;
 			else
-				node->parent->right = y;
-			y->left = node;
-			node->parent = y;
-        }
-        void rotateRight(nodeType ptr)
-        {
-            nodeType left_child = ptr->left;
-            ptr->left = left_child->right;
-            if (ptr->left != NULL)
-                ptr->left->parent = ptr;
-            left_child->parent = ptr->parent;
-            if (ptr->parent == _end)
-                _end->left = left_child;
-            if (ptr->parent == NULL)
-                _root = left_child;
-            else if (isLeftLeftCase(ptr))
-                ptr->parent->left = left_child;
-            else
-                ptr->parent->right = left_child;
-            left_child->right = ptr;
-            ptr->parent = left_child;
-        }
+				node->_parent->_right = right_node;
+			right_node->_left = node;
+			node->_parent = right_node;
+		}
+
+		void rotate_right(node_ptr node)
+		{
+			node_ptr left_node = node->_left;
+			node->_left = left_node->_right;
+			if (node->_left != NULL)
+				node->_left->_parent = node;
+			left_node->_parent = node->_parent;
+			if (tree_is_left_child<value_type>(node))
+				node->_parent->_left = left_node;
+			else
+				node->_parent->_right = left_node;
+			left_node->_right = node;
+			node->_parent = left_node;
+		}
 
     private:
         void fixValidation(nodeType node)
