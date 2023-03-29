@@ -102,15 +102,6 @@ namespace ft
 		size_type max_size() const { return this->_allocator.max_size() / 5; }
     public:
         // get-set
-        nodeType getRoot()
-        {
-            return (_root);
-        }
-
-        nodeType getLast()
-        {
-            return (_last);
-        }
 
     public:
         // rules;
