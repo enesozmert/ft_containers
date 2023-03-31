@@ -1,32 +1,32 @@
-#ifndef RB_ITERATOR
-#define RB_ITERATOR
+#ifndef RB_ITERATOR_HPP
+#define RB_ITERATOR_HPP
 
 #include "../tree/RBTreeNode.hpp"
+#include "../functions/RBTreeFunctions.hpp"
 
 namespace ft
 {
-	template <typename NodePtr, typename Value>
+	template <typename T, typename Value>
 	class rb_iterator
 	{
 	public:
-		typedef Iterator iterator_type;
-		typedef typename iterator_traits<Iterator>::difference_type difference_type;
-		typedef typename iterator_traits<Iterator>::value_type value_type;
-		typedef typename iterator_traits<Iterator>::pointer pointer;
-		typedef typename iterator_traits<Iterator>::reference reference;
-		typedef typename iterator_traits<Iterator>::iterator_category iterator_category;
-		typedef RBTreeNode<value_type> node_type;
-		typedef node_type *node_ptr;
+		typedef typename iterator_traits<T>::difference_type difference_type;
+		typedef typename iterator_traits<T>::value_type value_type;
+		typedef typename iterator_traits<T>::pointer pointer;
+		typedef typename iterator_traits<T>::reference reference;
+		typedef typename iterator_traits<T>::iterator_category iterator_category;
+		typedef RBTreeNode<value_type> nodeType;
+		typedef nodeType *node_ptr;
 
 	private:
-		NodePtr _node;
+		value_type _node;
 
 	public:
 		rb_iterator() : _node() {}
 
 		rb_iterator(const rb_iterator &it) : _node(it._node) {}
 
-		rb_iterator(const NodePtr &val) : _node(val) {}
+		rb_iterator(const value_type &val) : _node(val) {}
 
 		rb_iterator &operator=(const rb_iterator &it)
 		{
@@ -35,7 +35,7 @@ namespace ft
 			return *this;
 		}
 
-		rb_iterator &operator=(const NodePtr &p)
+		rb_iterator &operator=(const value_type &p)
 		{
 			_node = p;
 			return *this;
@@ -84,22 +84,22 @@ namespace ft
 			return tmp;
 		}
 
-		NodePtr base() const
+		value_type base() const
 		{
 			return _node;
 		}
 	};
 
-	template <typename NodePtr, typename Value>
+	template <typename value_type, typename Value>
 	inline bool
-	operator==(const rb_iterator<NodePtr, Value> &rhs, const rb_iterator<NodePtr, Value> &lhs)
+	operator==(const rb_iterator<value_type, Value> &rhs, const rb_iterator<value_type, Value> &lhs)
 	{
 		return rhs.base() == lhs.base();
 	}
 
-	template <typename NodePtr, typename Value>
+	template <typename value_type, typename Value>
 	inline bool
-	operator!=(const rb_iterator<NodePtr, Value> &rhs, const rb_iterator<NodePtr, Value> &lhs)
+	operator!=(const rb_iterator<value_type, Value> &rhs, const rb_iterator<value_type, Value> &lhs)
 	{
 		return rhs.base() != lhs.base();
 	}

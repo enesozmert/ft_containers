@@ -1,11 +1,12 @@
-#ifndef RBTREEFUNCTIONS
-#define RBTREEFUNCTIONS
+#ifndef RBTREEFUNCTIONS_HPP
+#define RBTREEFUNCTIONS_HPP
 
 #include "../tree/RBTreeNode.hpp"
 
-template <typename T>
-	bool
-	tree_is_left_child(typename RBTreeNode<T>::node_ptr node)
+namespace ft
+{
+	template <typename T>
+	bool tree_is_left_child(typename RBTreeNode<T>::node_ptr node)
 	{
 		if (node && node->_parent && node->_parent->_left)
 			return node == node->_parent->_left;
@@ -14,8 +15,7 @@ template <typename T>
 	}
 
 	template <typename T>
-	bool
-	tree_is_left_child(typename RBTreeNode<T>::const_node_ptr node)
+	bool tree_is_left_child(typename RBTreeNode<T>::const_node_ptr node)
 	{
 		if (node && node->_parent && node->_parent->_left)
 			return node == node->_parent->_left;
@@ -58,6 +58,6 @@ template <typename T>
 			root = root->_right;
 		return root;
 	}
-
+} // namespace ft
 
 #endif

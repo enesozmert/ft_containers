@@ -176,20 +176,20 @@ using namespace ft;
 
 int main()
 {
-    RBTree<int> tree;
+    // RBTree<int> tree;
 
-    tree.insert(6);
-    tree.insert(2);
-    tree.insert(4);
-    tree.insert(5);
-    tree.insert(3);
+    // tree.insert(6);
+    // tree.insert(2);
+    // tree.insert(4);
+    // tree.insert(5);
+    // tree.insert(3);
     // Node *search_node = tree.search(1);
     // if (search_node != NULL)
     //     std::cout << "founded" << std::endl;
     // else if (search_node == NULL)
     //     std::cout << "not found" << std::endl;
-    std::cout << tree.isRootChildColorRed(tree.getLast()) << std::endl;
-    tree.printHelper(tree.getRoot(), "", true);
+    // std::cout << tree.isRootChildColorRed(tree.getLast()) << std::endl;
+    // tree.printHelper(tree.getRoot(), "", true);
     // tree.printRBTree(tree.getRoot());
 }
 

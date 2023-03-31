@@ -7,6 +7,7 @@
 #include <stddef.h>
 #include <memory>
 
+class RBTreeNode;
 namespace ft
 {
     template <typename T, typename Compare = std::less<T>, typename Alloc = std::allocator<T> >
@@ -33,6 +34,8 @@ namespace ft
         typedef ft::reverse_iterator<iterator> reverse_iterator;
         typedef ft::reverse_iterator<const_iterator> const_reverse_iterator;
 
+        typedef typename RBTreeNode<T>::Color node_color;
+
     private:
         size_type _size;
         node_type _parent;
@@ -46,10 +49,10 @@ namespace ft
          */
     public:
         // Constructors
-        RBtree(const value_compare &comp, const allocator_type &alloc)
+        RBTree(const value_compare &comp, const allocator_type &alloc)
             : _size(), _parent(), _begin_node(&_parent), _compare(comp), _allocator(alloc), _node_allocator(alloc) {}
 
-        RBtree(const RBtree &t)
+        RBTree(const RBTree &t)
             : _size(), _parent(), _begin_node(&_parent), _compare(t._compare), _allocator(t._allocator), _node_allocator(t._node_allocator)
         {
             if (t.root() != NULL)
@@ -60,7 +63,7 @@ namespace ft
         }
 
         // Destructor
-        ~RBtree()
+        ~RBTree()
         {
             if (this->root() != NULL)
             {
@@ -71,7 +74,7 @@ namespace ft
         }
 
         // Operator Overload
-        RBtree &operator=(const RBtree &t)
+        RBTree &operator=(const RBTree &t)
         {
             if (this != &t)
             {
@@ -85,27 +88,29 @@ namespace ft
             }
             return *this;
         }
+
     public:
         // Iterators
-		iterator begin() { return iterator(this->_begin_node); }
-		const_iterator begin() const { return const_iterator(this->_begin_node); }
-		iterator end() { return iterator(&this->_parent); }
-		const_iterator end() const { return const_iterator(&this->_parent); }
-		reverse_iterator rbegin() { return reverse_iterator(this->end()); }
-		const_reverse_iterator rbegin() const { return const_reverse_iterator(this->end()); }
-		reverse_iterator rend() { return reverse_iterator(this->begin()); }
-		const_reverse_iterator rend() const { return const_reverse_iterator(this->begin()); }
+        iterator begin() { return iterator(this->_begin_node); }
+        const_iterator begin() const { return const_iterator(this->_begin_node); }
+        iterator end() { return iterator(&this->_parent); }
+        const_iterator end() const { return const_iterator(&this->_parent); }
+        reverse_iterator rbegin() { return reverse_iterator(this->end()); }
+        const_reverse_iterator rbegin() const { return const_reverse_iterator(this->end()); }
+        reverse_iterator rend() { return reverse_iterator(this->begin()); }
+        const_reverse_iterator rend() const { return const_reverse_iterator(this->begin()); }
 
-		// Capacity
-		bool empty() const { return this->_size == 0; }
-		size_type size() const { return this->_size; }
-		size_type max_size() const { return this->_allocator.max_size() / 5; }
+        // Capacity
+        bool empty() const { return this->_size == 0; }
+        size_type size() const { return this->_size; }
+        size_type max_size() const { return this->_allocator.max_size() / 5; }
+
     public:
         // get-set
 
     public:
         // rules;
-        bool isRootColorBlack(nodeType &node)
+        bool isRootColorBlack(node_ptr &node)
         {
             // (void)node;
             // 1. olarak yazılır/kullanılır;
@@ -113,7 +118,7 @@ namespace ft
                 return (false);
             return (true);
         }
-        bool isCurrentColorRed(nodeType node)
+        bool isCurrentColorRed(node_ptr node)
         {
             // (void)node;
             // 1. olarak yazılır/kullanılır;
@@ -121,7 +126,7 @@ namespace ft
                 return (false);
             return (true);
         }
-        bool isRootChildColorRed(nodeType node)
+        bool isRootChildColorRed(node_ptr node)
         {
             // (void)node;
             // 1. olarak yazılır/kullanılır;
@@ -130,55 +135,70 @@ namespace ft
             return (true);
         }
 
-        bool is_nil(nodeType node) const
-        {
-            return node == _nil || node == _header;
-        }
-
     private:
         // tree utils;
-        int getHeight(nodeType *root)
+        int getHeight(node_ptr *root)
         {
             if (root == NULL)
                 return (0);
             return (1 + std::max(getHeight(root->left), getHeight(root->right)));
         }
-        nodeType getMax(nodeType root)
+        node_ptr getMax(node_ptr root)
         {
             if (!root || !root->right)
                 return (root);
             return getMax(root->right);
         }
-        nodeType getMin(nodeType root)
+        node_ptr getMin(node_ptr root)
         {
             if (!root || !root->left)
                 return (root);
             return getMin(root->left);
         }
-        void changeColor(nodeType *node)
-        {
-            (void)node;
-        }
-        void rootChangeColor(nodeType root)
-        {
-            if (root != NULL)
-                root->color = ft::BLACK;
-        }
-        void lastedNode(nodeType lastNode)
-        {
-            _last = search(lastNode->key);
-            // std::string color = _last->parent->color == RBTreeNode::RED ? "RED" : "BLACK";
-            // std::cout << "last color : " << color << "num" << _last->parent->key << std::endl;
-        }
-        void createNode(nodeType *node, value_type value)
-        {
-            *node = _allocator.allocate(1);
-            _allocator.construct(*node, value);
-        }
+        node_color get_node_color(node_ptr node)
+		{
+			if (node == NULL)
+				return BLACK;
+			else
+				return node->_color;
+		}
+        node_ptr construct_node(const value_type& data)
+		{
+			node_ptr new_node = this->_node_allocator.allocate(1);
+			this->_allocator.construct(&new_node->_data, data);
+			new_node->_color = RED;
+			new_node->_parent = NULL;
+			new_node->_left = NULL;
+			new_node->_right = NULL;
+			if (this->empty() || this->_compare(data, this->_begin_node->_data))
+				this->_begin_node = new_node;
+			++this->_size;
+			return new_node;
+		}   
+		node_ptr copy(const_node_ptr node)
+		{
+			if (node == NULL)
+				return NULL;
+			node_ptr new_node = this->construct_node(node->_data);
+			new_node->_left = copy(node->_left);
+			if (new_node->_left != NULL)
+				new_node->_left->_parent = new_node;
+			new_node->_right = copy(node->_right);
+			if (new_node->_right != NULL)
+				new_node->_right->_parent = new_node;
+			return new_node;
+		}
+        node_ptr get_sibling(node_ptr node) const
+		{
+			if (tree_is_left_child<value_type>(node))
+				return node->_parent->_right;
+			else
+				return node->_parent->_left;
+		}
 
     public:
         // tree user utils
-        void printHelper(nodeType root, std::string indent, bool last)
+        void printHelper(node_ptr root, std::string indent, bool last)
         {
             if (root != NULL)
             {
@@ -204,149 +224,71 @@ namespace ft
     public:
         // tree rotate;
         void rotate_left(node_ptr node)
-		{
-			node_ptr right_node = node->_right;
-			node->_right = right_node->_left;
-			if (node->_right != NULL)
-				node->_right->_parent = node;
-			right_node->_parent = node->_parent;
-			if (tree_is_left_child<value_type>(node))
-				node->_parent->_left = right_node;
-			else
-				node->_parent->_right = right_node;
-			right_node->_left = node;
-			node->_parent = right_node;
-		}
-
-		void rotate_right(node_ptr node)
-		{
-			node_ptr left_node = node->_left;
-			node->_left = left_node->_right;
-			if (node->_left != NULL)
-				node->_left->_parent = node;
-			left_node->_parent = node->_parent;
-			if (tree_is_left_child<value_type>(node))
-				node->_parent->_left = left_node;
-			else
-				node->_parent->_right = left_node;
-			left_node->_right = node;
-			node->_parent = left_node;
-		}
-
-    private:
-        void fixValidation(nodeType node)
         {
-            // while (node.parent != NULL && node.parent->color == RED)
-            // {
-            // }
-            selectState(node);
-            // 3. olarak yazılır/kullanılır; true => devam , false
+            node_ptr right_node = node->_right;
+            node->_right = right_node->_left;
+            if (node->_right != NULL)
+                node->_right->_parent = node;
+            right_node->_parent = node->_parent;
+            if (tree_is_left_child<value_type>(node))
+                node->_parent->_left = right_node;
+            else
+                node->_parent->_right = right_node;
+            right_node->_left = node;
+            node->_parent = right_node;
         }
-        bool checkValidation(nodeType node)
+
+        void rotate_right(node_ptr node)
         {
-            // 3. olarak yazılır/kullanılır; true => devam , false => fixValidation yapılır?
-            (void)node;
-            // nodeType*current = root;
-            // while (current != NULL)
-            // {
-            // }
-            return (true);
-        }
-        int selectState(nodeType node)
-        {
-            // (void)node;
-            // 2. olarak yazılır/kullanılır;
-            (void)node;
-            // if (isLeftLeftCase(node->left))
-            // {
-            //     std::cout << "left left Case OKOKOKOKOKOKOKOKOKOKOKOKOKOOKKOKOO" << std::endl;
-            //     // rotateRight(node);
-            // }
-            // else
-            //     std::cout << "left left Case NONONONONONONONONONO" << std::endl;
-            // if (isRightRightCase(node->right))
-            // {
-            //     std::cout << "ok ok ok ok ok ok ok ok ok ok ok ok ok ok ok ok ok ok ok ok ok ok ok ok ok ok ok ok ok" << std::endl;
-            //     // rotateLeft(node);
-            // }
-            // else
-            //     std::cout << "no no no no no no no no no no non ono no non on on onononon ononon ononon ononon onon o" << std::endl;
-            return (0);
+            node_ptr left_node = node->_left;
+            node->_left = left_node->_right;
+            if (node->_left != NULL)
+                node->_left->_parent = node;
+            left_node->_parent = node->_parent;
+            if (tree_is_left_child<value_type>(node))
+                node->_parent->_left = left_node;
+            else
+                node->_parent->_right = left_node;
+            left_node->_right = node;
+            node->_parent = left_node;
         }
 
     public:
-        nodeType search(const value_type &key)
-        {
-            nodeType current = _root;
-            while (current != NULL)
-            {
-                if (current->key == key)
-                {
-                    std::cout << "Found " << key << " in Red Black Tree.\n";
-                    return (current);
-                }
-                else if (current->key < key)
-                    current = current->right;
-                else
-                    current = current->left;
-            }
-            std::cout << key << " is not found in Red Black Tree.\n";
-            return (NULL);
-        }
-        void insertForRoot(const value_type &key)
-        {
-            createNode(&_root, key);
-            _root->color = ft::BLACK;
-            _end->left = getRoot();
-            _root->parent = _end;
-            _end->parent = getMax(_root);
-            if (_root != NULL && _root->parent != NULL)
-                lastedNode(_root);
-        }
-        void insertForChild(const value_type &key)
-        {
-            nodeType ptr;
-            nodeType parent = NULL;
-            nodeType current = _root;
+        // Observer
+        value_compare value_comp() const { return this->_compare; }
 
-            createNode(&ptr, key);
-            while (current != NULL)
-            {
-                parent = current;
-                if (ptr->key < current->key)
-                    current = current->left;
-                else
-                    current = current->right;
-            }
-            ptr->parent = parent;
-            if (parent == NULL)
-            {
-                _root = ptr;
-                _root->parent = NULL;
-            }
-            else if (ptr->key < parent->key)
-                parent->left = ptr;
-            else
-                parent->right = ptr;
-            if (ptr != NULL && ptr->parent != NULL)
-                lastedNode(ptr);
-            fixValidation(_last);
-        }
-        void insert(const value_type &key)
+    public:
+        // Operations
+        iterator find(const value_type &val)
         {
-            if (!_end)
-                createNode(&_end, T());
-            if (_root == NULL)
-                insertForRoot(key);
-            else
-                insertForChild(key);
-            _count += 1;
-            // selectState
-            // isAllFunction
-            // fixValidation for is
-            // checkValidation
-            rootChangeColor(_root);
-            return;
+            node_ptr node = this->root();
+
+            while (node != NULL)
+            {
+                if (this->_compare(node->_data, val))
+                    node = node->_right;
+                else if (this->_compare(val, node->_data))
+                    node = node->_left;
+                else
+                    return iterator(node);
+            }
+            return this->end();
+        }
+
+        const_iterator find(const value_type &val) const
+        {
+            const_node_ptr node = this->root();
+
+            while (node != NULL)
+            {
+                if (this->_compare(node->_data, val))
+                    node = node->_right;
+                else if (this->_compare(val, node->_data))
+                    node = node->_left;
+                else
+                    return const_iterator(node);
+            }
+            return this->end();
         }
         void delone(const value_type &key)
         {

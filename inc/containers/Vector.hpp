@@ -245,18 +245,17 @@ namespace ft
             difference_type n = last - first;
             iterator new_end = std::copy(last, this->end(), first);
             for (iterator it = new_end; it != this->end(); ++it)
-                this->_allocator.destroy(std::addressof(*it));
+                this->_allocator.destroy(&(*it));
             this->_size -= n;
-            return (new_end);
+            return new_end;
         }
-
         iterator insert(iterator position, const value_type &val)
         {
             size_type index = position - begin();
             if (this->_size >= this->_capacity)
             {
                 _smart_reAlloc(this->_size + 1);
-                
+
                 position = begin() + index;
             }
             iterator last = end() - 1;
@@ -290,21 +289,21 @@ namespace ft
         }
 
         template <class InputIterator>
-        void insert(iterator position, InputIterator first, InputIterator last, typename enable_if<!is_integral<InputIterator>::value>::type* = 0)
+        void insert(iterator position, InputIterator first, InputIterator last, typename enable_if<!is_integral<InputIterator>::value>::type * = 0)
         {
-                difference_type const   idx = position - this->begin();
-                difference_type const   old_end_idx = this->end() - this->begin();
-                iterator                old_end, end;
-                size_type dist = last - first;
-                this->resize(this->_size + dist);
+            difference_type const idx = position - this->begin();
+            difference_type const old_end_idx = this->end() - this->begin();
+            iterator old_end, end;
+            size_type dist = last - first;
+            this->resize(this->_size + dist);
 
-                end = this->end();
-                position = this->begin() + idx;
-                old_end = this->begin() + old_end_idx;
-                while (old_end != position)
-                    *--end = *--old_end;
-                while (first != last)
-                    *position++ = *first++;
+            end = this->end();
+            position = this->begin() + idx;
+            old_end = this->begin() + old_end_idx;
+            while (old_end != position)
+                *--end = *--old_end;
+            while (first != last)
+                *position++ = *first++;
         }
 
         bool positionCheck(size_type n)

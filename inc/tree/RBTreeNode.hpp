@@ -1,5 +1,5 @@
-#ifndef RBTREENODE
-#define RBTREENODE
+#ifndef RBTREENODE_HPP
+#define RBTREENODE_HPP
 
 #include <iostream>
 #include <stddef.h>
