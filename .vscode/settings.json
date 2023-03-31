@@ -62,6 +62,8 @@
         "vector": "cpp",
         "memory_resource": "cpp",
         "__functional_03": "cpp",
-        "list": "cpp"
+        "list": "cpp",
+        "map": "cpp",
+        "set": "cpp"
     }
 }

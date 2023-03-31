@@ -1,9 +1,12 @@
 #include <iostream>
 #include <vector>
+#include <map>
 #include "test.hpp"
 #include "../inc/containers/vector.hpp"
+#include "../inc/containers/map.hpp"
 #include "../inc/tree/RBTree.hpp"
 #include "../inc/tree/RBTreeNode.hpp"
+#include "test_map.hpp"
 
 using namespace ft;
 
@@ -116,9 +119,6 @@ using namespace ft;
 //     orjVecInsert.insert(orjVecInsert.end() - 1, 4);
 //     print_orj_vector(orjVecInsert);
 
-
-
-
 //     std::cout<< "***insert with 3 parameters***\n" <<std::endl;
 
 //     myVecInsert.insert(myVecInsert.begin(), 2, -3);
@@ -176,21 +176,29 @@ using namespace ft;
 
 int main()
 {
-    // RBTree<int> tree;
+    std::cout << "Map test is starting..." << std::endl;
+    mapBegin();
+    mapEnd();
+    mapRBegin();
+    mapREnd();
+    mapEmpty();
+    mapSize();
+    mapMaxSize();
 
-    // tree.insert(6);
-    // tree.insert(2);
-    // tree.insert(4);
-    // tree.insert(5);
-    // tree.insert(3);
-    // Node *search_node = tree.search(1);
-    // if (search_node != NULL)
-    //     std::cout << "founded" << std::endl;
-    // else if (search_node == NULL)
-    //     std::cout << "not found" << std::endl;
-    // std::cout << tree.isRootChildColorRed(tree.getLast()) << std::endl;
-    // tree.printHelper(tree.getRoot(), "", true);
-    // tree.printRBTree(tree.getRoot());
+    mapBoxBrackets();
+    mapInsert();
+    mapErase();
+    mapSwap();
+    mapClear();
+
+    mapKeyComp();
+    mapValueComp();
+
+    mapFind();
+    mapCount();
+    mapLowerBound();
+    mapUpperBound();
+    mapEqualRange();
+
+    std::cout << "Map test finished" << std::endl;
 }
-
-
