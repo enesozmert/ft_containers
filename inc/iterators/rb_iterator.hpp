@@ -3,30 +3,38 @@
 
 #include "../tree/RBTreeNode.hpp"
 #include "../functions/RBTreeFunctions.hpp"
+#include "iterator_traits.hpp"
 
 namespace ft
 {
-	template <typename T, typename Value>
+	template <typename Node_ptr, typename Value>
 	class rb_iterator
 	{
+		/*
+		 * Member types :
+		 */
 	public:
-		typedef typename iterator_traits<T>::difference_type difference_type;
-		typedef typename iterator_traits<T>::value_type value_type;
-		typedef typename iterator_traits<T>::pointer pointer;
-		typedef typename iterator_traits<T>::reference reference;
-		typedef typename iterator_traits<T>::iterator_category iterator_category;
-		typedef RBTreeNode<value_type> nodeType;
-		typedef nodeType *node_ptr;
+		typedef ft::bidirectional_iterator_tag iterator_category;
+		typedef ptrdiff_t difference_type;
+		typedef Value value_type;
+		typedef Value *pointer;
+		typedef Value &reference;
 
+		/*
+		 * Member variables :
+		 */
 	private:
-		value_type _node;
+		Node_ptr _node;
 
+		/*
+		 * Member functions :
+		 */
 	public:
 		rb_iterator() : _node() {}
 
 		rb_iterator(const rb_iterator &it) : _node(it._node) {}
 
-		rb_iterator(const value_type &val) : _node(val) {}
+		rb_iterator(const Node_ptr &val) : _node(val) {}
 
 		rb_iterator &operator=(const rb_iterator &it)
 		{
@@ -35,7 +43,7 @@ namespace ft
 			return *this;
 		}
 
-		rb_iterator &operator=(const value_type &p)
+		rb_iterator &operator=(const Node_ptr &p)
 		{
 			_node = p;
 			return *this;
@@ -84,22 +92,22 @@ namespace ft
 			return tmp;
 		}
 
-		value_type base() const
+		Node_ptr base() const
 		{
 			return _node;
 		}
 	};
 
-	template <typename value_type, typename Value>
+	template <typename Node_ptr, typename Value>
 	inline bool
-	operator==(const rb_iterator<value_type, Value> &rhs, const rb_iterator<value_type, Value> &lhs)
+	operator==(const rb_iterator<Node_ptr, Value> &rhs, const rb_iterator<Node_ptr, Value> &lhs)
 	{
 		return rhs.base() == lhs.base();
 	}
 
-	template <typename value_type, typename Value>
+	template <typename Node_ptr, typename Value>
 	inline bool
-	operator!=(const rb_iterator<value_type, Value> &rhs, const rb_iterator<value_type, Value> &lhs)
+	operator!=(const rb_iterator<Node_ptr, Value> &rhs, const rb_iterator<Node_ptr, Value> &lhs)
 	{
 		return rhs.base() != lhs.base();
 	}

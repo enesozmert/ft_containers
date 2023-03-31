@@ -3,6 +3,7 @@
 
 #include "RBTreeNode.hpp"
 #include "../iterators/rb_iterator.hpp"
+#include "../iterators/rb_const_iterator.hpp"
 #include "../common/pair/pair.hpp"
 #include <iostream>
 #include <stddef.h>
@@ -15,25 +16,24 @@ namespace ft
     class RBTree
     {
     private:
-        // tpyedef include
-        typedef ft::RBTreeNode<T> node_type;
-        typedef T value_type;
-        typedef Compare value_compare;
-        typedef Alloc allocator_type;
-        typedef typename allocator_type::template rebind<node_type>::other node_allocator_type;
-        typedef typename allocator_type::pointer pointer;
-        typedef typename allocator_type::const_pointer const_pointer;
-        typedef typename allocator_type::reference reference;
-        typedef typename allocator_type::const_reference const_reference;
-        typedef typename allocator_type::size_type size_type;
-        typedef typename allocator_type::difference_type difference_type;
-        typedef typename node_type::node_ptr node_ptr;
-        typedef typename node_type::const_node_ptr const_node_ptr;
-
-        typedef ft::rb_iterator<node_ptr, value_type> iterator;
-        typedef ft::rb_iterator<const_node_ptr, value_type> const_iterator;
-        typedef ft::reverse_iterator<iterator> reverse_iterator;
-        typedef ft::reverse_iterator<const_iterator> const_reverse_iterator;
+		typedef ft::RBTreeNode<T>											node_type;
+		typedef T															value_type;
+		typedef Compare														value_compare;
+		typedef Alloc														allocator_type;
+		typedef typename allocator_type::template rebind<node_type>::other	node_allocator_type;
+		typedef typename allocator_type::pointer							pointer;
+		typedef typename allocator_type::const_pointer						const_pointer;
+		typedef typename allocator_type::reference							reference;
+		typedef typename allocator_type::const_reference					const_reference;
+		typedef typename allocator_type::size_type							size_type;
+		typedef typename allocator_type::difference_type					difference_type;
+		typedef typename node_type::node_ptr								node_ptr;
+		typedef typename node_type::const_node_ptr							const_node_ptr;
+    public:
+		typedef ft::rb_iterator<node_ptr, value_type>					    iterator;
+		typedef ft::rb_const_iterator<const_node_ptr, value_type>		    const_iterator;
+		typedef ft::reverse_iterator<iterator>								reverse_iterator;
+		typedef ft::reverse_iterator<const_iterator>						const_reverse_iterator;
 
         typedef Color node_color;
 
@@ -132,6 +132,10 @@ namespace ft
 
     private:
         // tree utils;
+        node_ptr& root() { return this->_parent._left; }
+		const_node_ptr& root() const { return const_cast<const_node_ptr&>(this->_parent._left); }
+		node_ptr end_node() { return &this->_parent; }
+		const_node_ptr end_node() const { return const_cast<const_node_ptr>(&this->_parent); }
         int getHeight(node_ptr *root)
         {
             if (root == NULL)

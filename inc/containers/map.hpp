@@ -1,38 +1,47 @@
 #ifndef MAP_HPP
 #define MAP_HPP
 
-#include "../exception/map_exception.hpp"
 #include "../tree/RBTree.hpp"
-#include "../common/type_traits/type_traits.hpp"
-#include "../common/pair/pair.hpp"
 #include "../common/algorithm/algorithm.hpp"
 
-#include <stddef.h>
-#include <memory>
-#include <iostream>
-#include <string>
-
-class mapException;
 namespace ft
 {
+    /**
+     * @brief Map
+     * Maps are associative containers that store elements formed by a combination of a key value and a mapped value, following a specific order.
+     * @tparam Key
+     * @tparam T
+     * @tparam Compare
+     * @tparam std::allocator<ft::pair<const Key, T> >
+     */
     template <typename Key, typename T, typename Compare = std::less<Key>,
               typename Alloc = std::allocator<ft::pair<const Key, T> > >
     class map
     {
-
+        /*
+         * Member types :
+         */
     public:
+        // The first template parameter (Key)
         typedef Key key_type;
+        // The second template parameter (T)
         typedef T mapped_type;
-        typedef Compare key_compare;
-        typedef Alloc allocator_type;                            //
-        typedef typename Alloc::reference reference;             // Reference to element
-        typedef typename Alloc::const_reference const_reference; // Reference to constant element
-        typedef typename Alloc::pointer pointer;                 // Pointer to element
-        typedef typename Alloc::const_pointer const_pointer;     // Pointer to const element
-        typedef ptrdiff_t difference_type;
-        typedef std::size_t size_type;
+        // pair<const key_type,mapped_type>
         typedef ft::pair<const key_type, mapped_type> value_type;
-        typedef RBTree<value_type, value_compare, allocator_type> tree_type;
+        // The third template parameter (Compare)
+        typedef Compare key_compare;
+        // The fourth template parameter (Alloc)
+        typedef Alloc allocator_type;
+        // allocator_type::reference
+        typedef typename allocator_type::reference reference;
+        // allocator_type::const_reference
+        typedef typename allocator_type::const_reference const_reference;
+        // allocator_type::pointer
+        typedef typename allocator_type::pointer pointer;
+        // allocator_type::const_pointer
+        typedef typename allocator_type::const_pointer const_pointer;
+
+        // subclass
         class value_compare : public std::binary_function<value_type, value_type, bool>
         {
             friend class map;
@@ -48,6 +57,11 @@ namespace ft
                 return comp(x.first, y.first);
             }
         };
+
+    public:
+        // tree_type
+        typedef RBTree<value_type, value_compare, allocator_type> tree_type;
+        // a bidirectional iterator to value_type
         typedef typename tree_type::iterator iterator;
         // a bidirectional iterator to const value_type
         typedef typename tree_type::const_iterator const_iterator;
@@ -55,15 +69,25 @@ namespace ft
         typedef typename tree_type::reverse_iterator reverse_iterator;
         // reverse_iterator<const_iterator>
         typedef typename tree_type::const_reverse_iterator const_reverse_iterator;
-
+        // a signed integral type, identical to: iterator_traits<iterator>::difference_type
+        typedef ptrdiff_t difference_type;
+        // an unsigned integral type that can represent any non-negative value of difference_type
+        typedef size_t size_type;
+        /*
+         * Member variables :
+         */
     private:
-        size_type _size;
-        size_type _capacity;
-        Alloc _allocator;
-        value_type *_data;
         tree_type _tree;
-
+        /*
+         * Member functions :
+         */
     public:
+        /**
+         * @brief Default constructor
+         * Constructs an empty container, with no elements.
+         * @param comp
+         * @param alloc
+         */
         explicit map(const key_compare &comp = key_compare(), const allocator_type &alloc = allocator_type())
             : _tree(comp, alloc) {}
 
@@ -243,6 +267,10 @@ namespace ft
             return this->_tree.get_allocator();
         }
     };
+
+    /*
+     * Non-Member overloads :
+     */
     template <typename Key, typename T, typename Compare, typename Alloc>
     inline bool operator==(const map<Key, T, Compare, Alloc> &lhs, const map<Key, T, Compare, Alloc> &rhs)
     {

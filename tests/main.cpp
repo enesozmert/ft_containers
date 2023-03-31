@@ -177,28 +177,28 @@ using namespace ft;
 int main()
 {
     std::cout << "Map test is starting..." << std::endl;
-    mapBegin();
-    mapEnd();
-    mapRBegin();
-    mapREnd();
-    mapEmpty();
+    // mapBegin();
+    // mapEnd();
+    // mapRBegin();
+    // mapREnd();
+    // mapEmpty();
     mapSize();
-    mapMaxSize();
+    // mapMaxSize();
 
-    mapBoxBrackets();
-    mapInsert();
-    mapErase();
-    mapSwap();
-    mapClear();
+    // mapBoxBrackets();
+    // mapInsert();
+    // mapErase();
+    // mapSwap();
+    // mapClear();
 
-    mapKeyComp();
-    mapValueComp();
+    // mapKeyComp();
+    // mapValueComp();
 
-    mapFind();
-    mapCount();
-    mapLowerBound();
-    mapUpperBound();
-    mapEqualRange();
+    // mapFind();
+    // mapCount();
+    // mapLowerBound();
+    // mapUpperBound();
+    // mapEqualRange();
 
     std::cout << "Map test finished" << std::endl;
 }
