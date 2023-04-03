@@ -8,6 +8,9 @@
 #include <iostream>
 #include <stddef.h>
 #include <memory>
+#include <functional>
+#include <cmath>
+
 
 class RBTreeNode;
 namespace ft
@@ -16,24 +19,25 @@ namespace ft
     class RBTree
     {
     private:
-		typedef ft::RBTreeNode<T>											node_type;
-		typedef T															value_type;
-		typedef Compare														value_compare;
-		typedef Alloc														allocator_type;
-		typedef typename allocator_type::template rebind<node_type>::other	node_allocator_type;
-		typedef typename allocator_type::pointer							pointer;
-		typedef typename allocator_type::const_pointer						const_pointer;
-		typedef typename allocator_type::reference							reference;
-		typedef typename allocator_type::const_reference					const_reference;
-		typedef typename allocator_type::size_type							size_type;
-		typedef typename allocator_type::difference_type					difference_type;
-		typedef typename node_type::node_ptr								node_ptr;
-		typedef typename node_type::const_node_ptr							const_node_ptr;
+        typedef ft::RBTreeNode<T> node_type;
+        typedef T value_type;
+        typedef Compare value_compare;
+        typedef Alloc allocator_type;
+        typedef typename allocator_type::template rebind<node_type>::other node_allocator_type;
+        typedef typename allocator_type::pointer pointer;
+        typedef typename allocator_type::const_pointer const_pointer;
+        typedef typename allocator_type::reference reference;
+        typedef typename allocator_type::const_reference const_reference;
+        typedef typename allocator_type::size_type size_type;
+        typedef typename allocator_type::difference_type difference_type;
+        typedef typename node_type::node_ptr node_ptr;
+        typedef typename node_type::const_node_ptr const_node_ptr;
+
     public:
-		typedef ft::rb_iterator<node_ptr, value_type>					    iterator;
-		typedef ft::rb_const_iterator<const_node_ptr, value_type>		    const_iterator;
-		typedef ft::reverse_iterator<iterator>								reverse_iterator;
-		typedef ft::reverse_iterator<const_iterator>						const_reverse_iterator;
+        typedef ft::rb_iterator<node_ptr, value_type> iterator;
+        typedef ft::rb_const_iterator<const_node_ptr, value_type> const_iterator;
+        typedef ft::reverse_iterator<iterator> reverse_iterator;
+        typedef ft::reverse_iterator<const_iterator> const_reverse_iterator;
 
         typedef Color node_color;
 
@@ -132,10 +136,10 @@ namespace ft
 
     private:
         // tree utils;
-        node_ptr& root() { return this->_parent._left; }
-		const_node_ptr& root() const { return const_cast<const_node_ptr&>(this->_parent._left); }
-		node_ptr end_node() { return &this->_parent; }
-		const_node_ptr end_node() const { return const_cast<const_node_ptr>(&this->_parent); }
+        node_ptr &root() { return this->_parent._left; }
+        const_node_ptr &root() const { return const_cast<const_node_ptr &>(this->_parent._left); }
+        node_ptr end_node() { return &this->_parent; }
+        const_node_ptr end_node() const { return const_cast<const_node_ptr>(&this->_parent); }
         int getHeight(node_ptr *root)
         {
             if (root == NULL)
@@ -397,6 +401,7 @@ namespace ft
                 }
             }
         }
+
     public:
         // Operations
         iterator find(const value_type &val)
@@ -515,14 +520,107 @@ namespace ft
             }
         }
         void destroy(node_ptr node)
-		{
-			if (node == NULL)
-				return ;
-			destroy(node->_left);
-			destroy(node->_right);
-			this->destroy_node(node);
-		}
+        {
+            if (node == NULL)
+                return;
+            destroy(node->_left);
+            destroy(node->_right);
+            this->destroy_node(node);
+        }
+
+    public:
+        ft::pair<iterator, bool> insert(const value_type &val)
+        {
+            iterator it = find(val);
+            if (it != end())
+                return ft::make_pair<iterator, bool>(it, false);
+
+            node_ptr new_node = this->construct_node(val);
+            bool inserted = false;
+            iterator pos;
+
+            this->root() = this->insert(this->root(), new_node, inserted, pos);
+            this->root()->_parent = &this->_parent;
+            if (!inserted)
+                this->destroy_node(new_node);
+            else
+                this->rebalance_after_insertion(new_node);
+            this->root()->_color = BLACK;
+            return ft::make_pair(pos, inserted);
+        }
+
+        iterator insert(iterator position, const value_type &val)
+        {
+            (void)position;
+            return this->insert(val).first;
+        }
+
+        template <typename InputIterator>
+        void insert(InputIterator first, InputIterator last)
+        {
+            for (; first != last; first++)
+                this->insert(*first);
+        }
+        void erase(iterator position)
+        {
+            node_ptr pos = position.base();
+            if (pos == this->_begin_node)
+            {
+                position++;
+                this->_begin_node = position.base();
+            }
+            this->erase(this->root(), pos);
+            if (this->root() != NULL)
+            {
+                this->root()->_parent = this->end_node();
+                this->root()->_color = BLACK;
+            }
+            this->destroy_node(pos);
+        }
+
+        size_type erase(const value_type &val)
+        {
+            iterator pos = this->find(val);
+            if (pos == this->end())
+                return 0;
+            this->erase(pos);
+            return 1;
+        }
+
+        void erase(iterator first, iterator last)
+        {
+            while (first != last)
+                this->erase(first++);
+        }
+
+        void swap(RBTree &t)
+        {
+            ft::swap(this->_begin_node, t._begin_node);
+            ft::swap(this->_parent._left, t._parent._left);
+            ft::swap(this->_size, t._size);
+            if (this->_size != 0 && t._size != 0)
+                ft::swap(this->root()->_parent, t.root()->_parent);
+            else if (this->_size != 0)
+                this->root()->_parent = this->end_node();
+            else if (t._size != 0)
+                t.root()->_parent = t.end_node();
+            ft::swap(this->_compare, t._compare);
+        }
+
+        void clear()
+        {
+            if (this->root() != NULL)
+            {
+                this->destroy(this->root());
+                this->root() = NULL;
+                this->_begin_node = this->end_node();
+            }
+        }
     };
+    
+    template<typename T, typename Compare, typename Alloc>
+    void swap(RBTree<T, Compare, Alloc>& first, RBTree<T, Compare, Alloc>& second)
+    { first.swap(second); }
 }
 
 #endif

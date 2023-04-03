@@ -10,7 +10,7 @@ OBJ_DIR			=	obj/
 SRC_DIR			= 	tests/
 
 #Files
-SRC_FILE		=   main test_all test_map
+SRC_FILE		=   main test_all
 
 #FileCreate
 SRC 			= 	$(addprefix $(SRC_DIR), $(addsuffix .cpp, $(SRC_FILE)))
