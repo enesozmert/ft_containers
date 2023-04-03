@@ -2,5 +2,4 @@
 #define test_hpp
 
 void test_all();
-
 #endif

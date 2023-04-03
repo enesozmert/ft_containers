@@ -188,7 +188,7 @@ int main()
     // mapBoxBrackets();
     // mapInsert();
     // mapErase();
-    // mapSwap();
+    mapSwap();
     // mapClear();
 
     // mapKeyComp();

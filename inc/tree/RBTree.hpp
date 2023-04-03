@@ -4,13 +4,14 @@
 #include "RBTreeNode.hpp"
 #include "../iterators/rb_iterator.hpp"
 #include "../iterators/rb_const_iterator.hpp"
+#include "../iterators/reverse_iterator.hpp"
 #include "../common/pair/pair.hpp"
+#include "../common/algorithm/algorithm.hpp"
 #include <iostream>
 #include <stddef.h>
 #include <memory>
 #include <functional>
 #include <cmath>
-
 
 class RBTreeNode;
 namespace ft
@@ -616,11 +617,127 @@ namespace ft
                 this->_begin_node = this->end_node();
             }
         }
+        size_type count(const value_type& val) const
+		{ return this->find(val) == this->end() ? 0 : 1; }
+
+		iterator lower_bound(const value_type& val)
+		{
+			node_ptr node = this->root();
+			node_ptr pos = this->end_node();
+
+			while (node != NULL)
+			{
+				if (!this->_compare(node->_data, val))
+				{
+					pos = node;
+					node = node->_left;
+				}
+				else
+					node = node->_right;
+			}
+			return iterator(pos);
+		}
+
+		const_iterator lower_bound(const value_type& val) const
+		{
+			const_node_ptr node = this->root();
+			const_node_ptr pos = this->end_node();
+
+			while (node != NULL)
+			{
+				if (!this->_compare(node->_data, val))
+				{
+					pos = node;
+					node = node->_left;
+				}
+				else
+					node = node->_right;
+			}
+			return const_iterator(pos);
+		}
+
+		iterator upper_bound(const value_type& val)
+		{
+			node_ptr node = this->root();
+			node_ptr pos = this->end_node();
+
+			while (node != NULL)
+			{
+				if (this->_compare(val, node->_data))
+				{
+					pos = node;
+					node = node->_left;
+				}
+				else
+					node = node->_right;
+			}
+			return iterator(pos);
+		}
+
+		const_iterator upper_bound(const value_type& val) const
+		{
+			const_node_ptr node = this->root();
+			const_node_ptr pos = this->end_node();
+
+			while (node != NULL)
+			{
+				if (this->_compare(val, node->_data))
+				{
+					pos = node;
+					node = node->_left;
+				}
+				else
+					node = node->_right;
+			}
+			return const_iterator(pos);
+		}
+
+		ft::pair<iterator, iterator> equal_range(const value_type& val)
+		{
+			node_ptr node = this->root();
+			node_ptr pos = this->end_node();
+
+			while (node != NULL)
+			{
+				if (this->_compare(val, node->_data))
+				{
+					pos = node;
+					node = node->_left;
+				}
+				else if (this->_compare(node->_data, val))
+					node = node->_right;
+				else
+					return ft::make_pair(iterator(node), iterator(node->_right == NULL ? pos : tree_min<value_type>(node->_right)));
+			}
+			return ft::make_pair(iterator(pos), iterator(pos));
+		}
+
+		ft::pair<const_iterator, const_iterator> equal_range(const value_type& val) const
+		{
+			const_node_ptr node = this->root();
+			const_node_ptr pos = this->end_node();
+
+			while (node != NULL)
+			{
+				if (this->_compare(val, node->_data))
+				{
+					pos = node;
+					node = node->_left;
+				}
+				else if (this->_compare(node->_data, val))
+					node = node->_right;
+				else
+					return ft::make_pair(const_iterator(node), const_iterator(node->_right == NULL ? pos : tree_min<value_type>(node->_right)));
+			}
+			return ft::make_pair(const_iterator(pos), const_iterator(pos));
+		}
     };
-    
-    template<typename T, typename Compare, typename Alloc>
-    void swap(RBTree<T, Compare, Alloc>& first, RBTree<T, Compare, Alloc>& second)
-    { first.swap(second); }
+    template <typename T, typename Compare, typename Alloc>
+    void swap(RBTree<T, Compare, Alloc> &first, RBTree<T, Compare, Alloc> &second)
+    {
+        std::cout << "swapping " << std::endl;
+        first.swap(second);
+    }
 }
 
 #endif
