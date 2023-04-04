@@ -97,7 +97,7 @@ namespace ft
 	random_access_iterator<T> operator+(typename random_access_iterator<T>::difference_type n, const random_access_iterator<T> &x) { return x + n; }
 
 	template <typename T>
-	random_access_iterator<T> operator-(typename random_access_iterator<T>::difference_type n, const random_access_iterator<T> &x) { return x - n; }
+	random_access_iterator<T> operator-(typename random_acceszs_iterator<T>::difference_type n, const random_access_iterator<T> &x) { return x - n; }
 
 } // namespace ft
 
