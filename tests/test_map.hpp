@@ -150,66 +150,66 @@ void mapEnd()
     std::cout << "end test end" << std::endl;
 }
 
-// void mapRBegin()
-// {
+void mapRBegin()
+{
 
-//     std::cout << "rbegin test start" << std::endl;
+    std::cout << "rbegin test start" << std::endl;
 
-//     {
-//         std::map<char, int> orjmap;
-//         ft::map<char, int> mymap;
+    {
+        std::map<char, int> orjmap;
+        ft::map<char, int> mymap;
 
-//         orjmap['x'] = 100;
-//         orjmap['y'] = 200;
-//         orjmap['z'] = 300;
+        orjmap['x'] = 100;
+        orjmap['y'] = 200;
+        orjmap['z'] = 300;
 
-//         mymap['x'] = 100;
-//         mymap['y'] = 200;
-//         mymap['z'] = 300;
+        mymap['x'] = 100;
+        mymap['y'] = 200;
+        mymap['z'] = 300;
 
-//         // show content:
-//         std::map<char, int>::reverse_iterator oit;
-//         ft::map<char, int>::reverse_iterator mit;
+        // show content:
+        std::map<char, int>::reverse_iterator oit;
+        ft::map<char, int>::reverse_iterator mit;
 
-//         oit = orjmap.rbegin();
-//         mit = mymap.rbegin();
+        oit = orjmap.rbegin();
+        mit = mymap.rbegin();
 
-//         if (oit->first != mit->first || oit->second != mit->second)
-//         {
-//             std::cout << "FALSE" << std::endl;
-//             std::cout << "my map: " << mit->first << mit->second << "orj map: " << oit->first << oit->second << std::endl;
-//         }
-//         else
-//             std::cout << "\033[1;32m OK \033[0m" << std::endl;
-//     }
-//     {
-//         std::map<int, int> orjmap;
-//         ft::map<int, int> mymap;
+        if (oit->first != mit->first || oit->second != mit->second)
+        {
+            std::cout << "FALSE" << std::endl;
+            std::cout << "my map: " << mit->first << mit->second << "orj map: " << oit->first << oit->second << std::endl;
+        }
+        else
+            std::cout << "\033[1;32m OK \033[0m" << std::endl;
+    }
+    {
+        std::map<int, int> orjmap;
+        ft::map<int, int> mymap;
 
-//         orjmap[2] = 100;
-//         orjmap[6] = 200;
-//         orjmap[3] = 300;
+        orjmap[2] = 100;
+        orjmap[6] = 200;
+        orjmap[3] = 300;
 
-//         mymap[2] = 100;
-//         mymap[6] = 200;
-//         mymap[3] = 300;
+        mymap[2] = 100;
+        mymap[6] = 200;
+        mymap[3] = 300;
 
-//         std::map<int, int>::reverse_iterator oit = orjmap.rbegin();
-//         ft::map<int, int>::reverse_iterator mit = mymap.rbegin();
-//         oit++;
-//         mit++;
+        std::map<int, int>::reverse_iterator oit = orjmap.rbegin();
+        ft::map<int, int>::reverse_iterator mit = mymap.rbegin();
+        oit++;
+        mit++;
 
-//         if (oit->first != mit->first || oit->second != mit->second)
-//         {
-//             std::cout << "FALSE" << std::endl;
-//             std::cout << "my map: " << mit->first << mit->second << "orj map: " << oit->first << oit->second << std::endl;
-//         }
-//         else
-//             std::cout << "\033[1;32m OK \033[0m" << std::endl;
-//     }
+        if (oit->first != mit->first || oit->second != mit->second)
+        {
+            std::cout << "FALSE" << std::endl;
+            std::cout << "my map: " << mit->first << mit->second << "orj map: " << oit->first << oit->second << std::endl;
+        }
+        else
+            std::cout << "\033[1;32m OK \033[0m" << std::endl;
+    }
 
-//     std::cout << "rbegin test end" << std::endl;
-// }
+    std::cout << "rbegin test end" << std::endl;
+}
 
 void mapREnd()
 {

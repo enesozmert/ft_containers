@@ -1,36 +1,68 @@
-// #include "test.hpp"
-// #include "test_utils.hpp"
-// #include "test_vector.hpp"
-// #include "../inc/containers/vector.hpp"
+#include "test.hpp"
+#include "test_map.hpp"
+#include "test_vector.hpp"
 
-// using namespace ft;
+using namespace ft;
 
-// void test_all()
-// {
-//     ft::vector<int> my_vector;
-//     std::vector<int> orjinal_vector;
+void test_all()
+{
+    	std::cout<<"Vector test is starting..."<<std::endl;
+//iterators
+	testBegin();
+	
+	testPushBack();
+ 	testEnd();
+	testRbegin();
+	testRend();
 
-//     ft::vector<std::string> my_vector1;
-//     std::vector<std::string> orjinal_vector1;
+//capacity
+	testSize();
+	testMaxSize();
+	testResize(); 
+	testEmpty();
+ 	testReserve();
 
-//     test_vector_empty<int>(orjinal_vector, my_vector);
-//     test_vector_size<int>(orjinal_vector, my_vector);
-//     test_vector_max_size<int>(orjinal_vector, my_vector);
-//     test_vector_reserve<int>(orjinal_vector, my_vector);
-//     test_vector_capacity<int>(orjinal_vector, my_vector);
-//     test_vector_clear<int>(orjinal_vector, my_vector);
-//     // test_vector_insert<int>(orjinal_vector, my_vector);
-//     test_vector_erase<int>(orjinal_vector, my_vector);
-//     test_vector_push_back<int>(orjinal_vector, my_vector);
-//     test_vector_pop_back<int>(orjinal_vector, my_vector);
-//     test_vector_resize<int>(orjinal_vector, my_vector);
+//element access
+	testBoxBrackets();
+	testAt();
+	testFront();
+	testBack();
 
-//     // test_vector_empty<std::string>(orjinal_vector1, my_vector1);
-//     // test_vector_size<int>(orjinal_vector, my_vector);
-//     // test_vector_max_size<int>(orjinal_vector, my_vector);
-//     // test_vector_reserve<int>(orjinal_vector, my_vector);
-//     // test_vector_capacity<int>(orjinal_vector, my_vector);
-//     // test_vector_clear<int>(orjinal_vector, my_vector);
-//     // test_vector_insert<int>(orjinal_vector, my_vector);
-//     // test_vector_erase<int>(orjinal_vector, my_vector);
-// }
+//Modifiers:
+	testAssign();
+ 	testPushBack();
+	testPopBack();
+	testInsert();
+	testErase();
+	testSwap();
+	testClear();
+	testGetAllocator(); 
+	
+
+	std::cout<<"Vector test finished"<<std::endl;
+        std::cout << "Map test is starting..." << std::endl;
+    mapBegin();
+    mapEnd();
+    mapRBegin();
+    mapREnd();
+    mapEmpty();
+    mapSize();
+    mapMaxSize();
+
+    mapBoxBrackets();
+    mapInsert();
+    mapErase();
+    mapSwap();
+    mapClear();
+
+    mapKeyComp();
+    mapValueComp();
+
+    mapFind();
+    mapCount();
+    mapLowerBound();
+    mapUpperBound();
+    mapEqualRange();
+
+    std::cout << "Map test finished" << std::endl;
+}

@@ -19,7 +19,8 @@ namespace ft
 		typedef Value value_type;
 		typedef Value *pointer;
 		typedef Value &reference;
-
+		typedef const Value *const_pointer;
+        typedef const Value &const_reference;
 		/*
 		 * Member variables :
 		 */

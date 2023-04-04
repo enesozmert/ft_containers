@@ -205,7 +205,7 @@ namespace ft
         }
         // iter
         template <class InputIterator>
-        void assign(InputIterator first, InputIterator last, typename ft::enable_if<!ft::is_integral<InputIterator>::value, InputIterator>::type = false)
+        void assign(InputIterator first, InputIterator last, typename ft::enable_if<!is_integral<InputIterator>::value, bool>::type = true)
         {
             size_type i = 0;
             size_type n = 0;
